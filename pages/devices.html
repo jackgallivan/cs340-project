@@ -1,0 +1,107 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>NASA RDMS - Devices</title>
+    <meta name="description" content="CS340 Project">
+    <meta name="author" content="Jack Gallivan, Richie Stuver">
+</head>
+<html>
+    <body>
+        <header>
+            <nav>
+                <!-- Main Navigation for App -->
+                <ul>
+                    <a href="../index.html">Home</a>
+                    <a href="devices.html">Devices</a>
+                    <a href="missions.html">Missions</a>
+                    <a href="locations.html">Locations</a>
+                    <a href="functions.html">Functions</a>
+                    <a href="operators.html">Operators</a>
+                    <a href="device_function.html">Functions by Device</a>
+                </ul>
+            </nav>
+            <h1>Devices</h1>
+        </header>
+        <main>
+            <section class="add">
+                <!-- Allows user to create a new device and add to the database. -->
+                <h2>Add new device</h2>
+                <form>
+                    <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
+                         and decide what we need for that. -->
+                    <input type="text" placeholder="Device Name">
+                    <label for="dateLaunched">Date Launched</label>
+                    <input type="date" name="dateLaunched" placeholder="Date Launched">
+                    <input type="text" placeholder="Manufacturer">
+                    <input type="text" placeholder="Location ID">
+                    <input type="text" placeholder="Mission ID">
+                    <input type="submit" value="Add device"> 
+                </form>
+            </section>
+            <section class="display-data">
+                <!-- Allow user to view all data for the devices in the database. 
+                     Also allow delete and update of rows. -->
+                <h2>View all devices</h2>
+                <table id="devices">
+                    <thead>
+                        <tr>
+                            <th>Device ID</th>
+                            <th>Device Name</th>
+                            <th>Date Launched</th>
+                            <th>Manufacturer</th>
+                            <th>Location ID</th>
+                            <th>Mission ID</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Update</button></td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Update</button></td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Update</button></td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="update-data">
+                <h2>Update device</h2>
+                <form>
+                    <input type="text" placeholder="Device Name">
+                    <label for="dateLaunched">Date Launched</label>
+                    <input type="date" name="dateLaunched" placeholder="Date Launched">
+                    <input type="text" placeholder="Manufacturer">
+                    <input type="text" placeholder="Location ID">
+                    <input type="text" placeholder="Mission ID">
+                    <input type="submit" value="Confirm Edit"> 
+                    <button>Cancel</button>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>

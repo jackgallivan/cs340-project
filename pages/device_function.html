@@ -1,0 +1,86 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>NASA RDMS - Functions by Device</title>
+    <meta name="description" content="CS340 Project">
+    <meta name="author" content="Jack Gallivan, Richie Stuver">
+</head>
+<html>
+    <body>
+        <header>
+            <nav>
+                <!-- Main Navigation for App -->
+                <ul>
+                    <a href="../index.html">Home</a>
+                    <a href="devices.html">Devices</a>
+                    <a href="missions.html">Missions</a>
+                    <a href="locations.html">Locations</a>
+                    <a href="functions.html">Functions</a>
+                    <a href="operators.html">Operators</a>
+                    <a href="device_function.html">Functions by Device</a>
+                </ul>
+            </nav>
+            <h1>Functions by Device</h1>
+        </header>
+        <main>
+            <section class="add">
+                <!-- Allows user to create a new device-function relationship and add to the database. -->
+                <h2>Add new function to device</h2>
+                <form>
+                    <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
+                         and decide what we need for that. -->
+                    <input type="text" placeholder="Function ID">
+                    <input type="text" placeholder="Device ID">
+                    <input type="submit" value="Add"> 
+                </form>
+            </section>
+            <section class="display-data">
+                <!-- Allow user to view all data for the Functions by Device in the database. 
+                     Also allow user to delete rows. -->
+                <h2>View all functions by device</h2>
+                <table id="function-device">
+                    <thead>
+                        <tr>
+                            <th>Col1</th>
+                            <th>Col2</th>
+                            <th>Col3</th>
+                            <th>Col4</th>
+                            <th>Col5</th>
+                            <th>Col6</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button>Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </body>
+</html>
