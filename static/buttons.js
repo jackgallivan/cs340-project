@@ -76,21 +76,21 @@ function bindButtons() {
 function addRow() {
 
     // get data out of the form and add to an object
-    let workoutData = {};
+    let rowData = {};
     let name = document.getElementById("add-name").value;
     let reps = document.getElementById("add-reps").value;
     let weight = document.getElementById("add-weight").value;
     let date = document.getElementById("add-date").value;
     let units = document.getElementById("add-units").value;
 
-    workoutData.name = name;
-    workoutData.reps = reps;
-    workoutData.weight = weight;
-    workoutData.date = date;
-    workoutData.units = units;
+    rowData.name = name;
+    rowData.reps = reps;
+    rowData.weight = weight;
+    rowData.date = date;
+    rowData.units = units;
     if (units == "lbs") {
-        workoutData.lbs = 1;
-    } else {workoutData.lbs = 0;}
+        rowData.lbs = 1;
+    } else {rowData.lbs = 0;}
 
     // Open up a request and send to the app
     let req = new XMLHttpRequest();
@@ -100,25 +100,25 @@ function addRow() {
     req.addEventListener('load', () => {
         if (req.status < 400) {
             console.log(req.responseText);
-            workoutData.id = JSON.parse(req.responseText)['id'];
-            addToTable(workoutData);
+            rowData.id = JSON.parse(req.responseText)['id'];
+            addToTable(rowData);
         } else {
             console.log("looks like an error happened");
         }
     });
 
-    req.send(JSON.stringify(workoutData));
+    req.send(JSON.stringify(rowData));
 }  
 
 function submitEdit(event) {
     // buttons are nested in <td> which is in a <tr>
-    let row = event.target.parentElement.parentElement;
-    let workoutId = row.id;
-    let workout = document.getElementById(workoutId);
+    let tableRow = event.target.parentElement.parentElement;
+    let rowId = tableRow.id;
+    let row = document.getElementById(rowId);
 
     let body = {};
-    body['id'] = workoutId;
-    for (let element of workout.children) {
+    body['id'] = rowId;
+    for (let element of row.children) {
         if (element.firstElementChild.tagName == "INPUT") {
             let name = element.firstElementChild.getAttribute('name');
             let value = element.firstElementChild.value;
@@ -145,43 +145,51 @@ function submitEdit(event) {
 
 function deleteRow(event) {
     // buttons are nested in <td> which is in a <tr>
-    let row = event.target.parentElement.parentElement;
-    let workoutId = row.id;
+    let tableRow = event.target.parentElement.parentElement;
+    let rowId = tableRow.id;
 
-    // Open up a request and send to the app
-    let req = new XMLHttpRequest();
-    url = ''
-    req.open('DELETE', url, true);
-    req.setRequestHeader('Content-Type', 'application/json');
-    req.addEventListener('load', () => {
-        if (req.status < 400) {
-            console.log(req.responseText);
-            removeFromTable(workoutId);
-        } else {
-            console.log("looks like an error happened");
-        }
-    });
+    // NOTE: No database backend currently set up. 
+    // Use the below code INSTEAD of directly calling
+    // the removeFromTable(rowId) function once
+    // backend is live
 
-    req.send(JSON.stringify({'id': workoutId}));
+    removeFromTable(rowId); // Comment me out once backend is live!
+
+    // ** MAKE DB REQUEST ** //
+    // // Open up a request and send to the app
+    // let req = new XMLHttpRequest();
+    // url = ''
+    // req.open('DELETE', url, true);
+    // req.setRequestHeader('Content-Type', 'application/json');
+    // req.addEventListener('load', () => {
+    //     if (req.status < 400) {
+    //         console.log(req.responseText);
+    //         removeFromTable(rowId);
+    //     } else {
+    //         console.log("looks like an error happened");
+    //     }
+    // });
+
+    // req.send(JSON.stringify({'id': rowId}));
 
 }
 
 // UI HANDLERS
 
-function addToTable(workoutData) {
-    // present the data as a new row in the table
-    let table = document.getElementById("workout-table");
-    newWorkout = document.createElement("tr");
-    for (let data in workoutData) {
+function addToTable(rowData) {
+    // present the data as a new tableRow in the table
+    let table = document.getElementById("row-table");
+    newrow = document.createElement("tr");
+    for (let data in rowData) {
 
         if (data == 'id') {
-            newWorkout.id = workoutData[data];
+            newrow.id = rowData[data];
         }
         else if (data != 'lbs') {
             let td = document.createElement('td');
             td.setAttribute('name', data);
-            td.innerText = workoutData[data];
-            newWorkout.appendChild(td);
+            td.innerText = rowData[data];
+            newrow.appendChild(td);
         }
     }
 
@@ -201,28 +209,28 @@ function addToTable(workoutData) {
     edit.appendChild(editBtn);
     del.appendChild(delBtn);
 
-    newWorkout.appendChild(edit);
-    newWorkout.appendChild(del);
+    newrow.appendChild(edit);
+    newrow.appendChild(del);
     
-    table.appendChild(newWorkout);
+    table.appendChild(newrow);
 }
 
-function removeFromTable(workoutId) {
-    // pass in the id of the table row to be removed. 
-    let tbody = document.getElementById("workout-table");
-    let workout = document.getElementById(workoutId);
-    tbody.removeChild(workout);
+function removeFromTable(rowId) {
+    // pass in the id of the table tableRow to be removed. 
+    let tbody = document.getElementById("data-table");
+    let row = document.getElementById(rowId);
+    tbody.removeChild(row);
 }
 
 function makeEditable(event) {
     // buttons are nested in <td> which is in a <tr>
-    let row = event.target.parentElement.parentElement;
-    let workoutId = row.id;
+    let tableRow = event.target.parentElement.parentElement;
+    let rowId = tableRow.id;
 
     let originalContent = {};
 
-    let workout = document.getElementById(workoutId);
-    for (let child of workout.children) {
+    let row = document.getElementById(rowId);
+    for (let child of row.children) {
         if (!child.firstElementChild) {
             let field = document.createElement('input');
             field.name = child.getAttribute('name');
@@ -262,12 +270,12 @@ function cancelEdit(event, originalContent) {
     //console.log(originalContent);
 
     // buttons are nested in <td> which is in a <tr>
-    let row = event.target.parentElement.parentElement;
-    let workoutId = row.id;
-    let workout = document.getElementById(workoutId);
+    let tableRow = event.target.parentElement.parentElement;
+    let rowId = tableRow.id;
+    let row = document.getElementById(rowId);
 
     // cycle through only ELEMENT nodes (given by .children)
-    for (let child of workout.children) {
+    for (let child of row.children) {
         if (child.firstElementChild.tagName == "INPUT") {
             let content = child.firstChild.value;
             child.removeChild(child.firstElementChild);
