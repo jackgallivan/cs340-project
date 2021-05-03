@@ -4,6 +4,7 @@
     <title>NASA RDMS - Functions</title>
     <meta name="description" content="CS340 Project">
     <meta name="author" content="Jack Gallivan, Richie Stuver">
+    <link rel="stylesheet" href="../static/styles.css">
 </head>
 <html>
     <body>
@@ -49,26 +50,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <!-- format for a table row: 
+                            <tr id='1'> <- ID should be set by retrieving PK from database
+                                <td>test</td> <-- Column data
+                                <td>test</td>
+                                <td>test</td>
+                                <td><button name="edit">Update</button></td> <- Must be named "edit"
+                                <td><button name="del">Delete</button></td>  <- Must be named "del"
+                            </tr> 
+                        -->
+                        <tr id='1'>
                             <td>test</td>
                             <td>test</td>
                             <td>test</td>
-                            <td><button>Update</button></td>
-                            <td><button>Delete</button></td>
+                            <td><button name="edit">Update</button></td>
+                            <td><button name="del">Delete</button></td>
                         </tr>
-                        <tr>
+                        <tr id='2'>
                             <td>test</td>
                             <td>test</td>
                             <td>test</td>
-                            <td><button>Update</button></td>
-                            <td><button>Delete</button></td>
+                            <td><button name="edit">Update</button></td>
+                            <td><button name="del">Delete</button></td>
                         </tr>
-                        <tr>
+                        <tr id='3'>
                             <td>test</td>
                             <td>test</td>
                             <td>test</td>
-                            <td><button>Update</button></td>
-                            <td><button>Delete</button></td>
+                            <td><button name="edit">Update</button></td>
+                            <td><button name="del">Delete</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -83,5 +93,7 @@
                 </form>
             </section>
         </main>
+        <!-- Client-side Javascript for Button Actions -->
+        <script src="../static/script.js"></script>
     </body>
 </html>
