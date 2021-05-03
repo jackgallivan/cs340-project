@@ -283,7 +283,7 @@ function cancelEdit(event, originalContent) {
             let editBtn = document.createElement('button');
 
             editBtn.name = "edit";
-            editBtn.textContent = "Edit";
+            editBtn.textContent = "Update";
 
             bindEdit(editBtn);
             child.replaceChild(editBtn, child.firstElementChild);
