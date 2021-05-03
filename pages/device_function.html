@@ -75,6 +75,97 @@
                     </tbody>
                 </table>
             </section>
+            <section class="display-data">
+                <!-- Allow user to view all data for the devices in the database.
+                     Also allow delete and update of rows. -->
+                <h2>View all devices</h2>
+                <table id="devices">
+                    <thead>
+                        <tr>
+                            <th>Device ID</th>
+                            <th>Device Name</th>
+                            <th>Date Launched</th>
+                            <th>Manufacturer</th>
+                            <th>Location ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- format for a table row: 
+                            <tr id='1'> <- ID should be set by retrieving PK from database
+                                <td>test</td> <-- Column data
+                                <td>test</td>
+                                <td>test</td>
+                                <td><button name="edit">Update</button></td> <- Must be named "edit"
+                                <td><button name="del">Delete</button></td>  <- Must be named "del"
+                            </tr> 
+                        -->
+                        <tr id='1'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                        <tr id='2'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                        <tr id='3'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="display-data">
+                <!-- Allow user to view all data for the functions in the database.
+                     Also allow delete and update of rows. -->
+                <h2>View all functions</h2>
+                <table id="functions">
+                    <thead>
+                        <tr>
+                            <th>Function ID</th>
+                            <th>Function Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- format for a table row: 
+                            <tr id='1'> <- ID should be set by retrieving PK from database
+                                <td>test</td> <-- Column data
+                                <td>test</td>
+                                <td>test</td>
+                                <td><button name="edit">Update</button></td> <- Must be named "edit"
+                                <td><button name="del">Delete</button></td>  <- Must be named "del"
+                            </tr> 
+                        -->
+                        <tr id='1'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                        <tr id='2'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                        <tr id='3'>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </main>
         <!-- Client-side Javascript for Button Actions -->
         <script src="../static/script.js"></script>
