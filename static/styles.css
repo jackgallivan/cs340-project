@@ -1,0 +1,27 @@
+
+table {
+    border-collapse: collapse;
+    width: 75em;
+}
+
+td, th {
+    height: 2em;
+    width: 8em;
+    /* padding: 1em; */
+    border-bottom: black solid 1px;
+}
+
+td input {
+    font-size: small;
+    width: 8em;
+}
+
+.alert {
+    background-color: salmon;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: larger;
+    width: 25%;
+    padding: 1em;
+    border-radius: 1em;
+}
