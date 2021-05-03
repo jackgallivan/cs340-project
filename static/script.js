@@ -68,6 +68,11 @@ function bindButtons() {
 
 // REQUEST HANDLERS
 
+// NOTE: only edit and cancel edit buttons are working (UI only)
+// TO DO: 
+// - refactor add and delete buttons (UI)
+// - eventually need to integrate with our backend
+
 function addRow() {
 
     // get data out of the form and add to an object
