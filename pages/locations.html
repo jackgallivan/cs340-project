@@ -52,14 +52,14 @@
                         </tr>
                     </thead>
                     <tbody id="data-table">
-                        <!-- format for a table row: 
+                        <!-- format for a table row:
                             <tr id='1'> <- ID should be set by retrieving PK from database
                                 <td>test</td> <-- Column data
                                 <td>test</td>
                                 <td>test</td>
                                 <td><button name="edit">Update</button></td> <- Must be named "edit"
                                 <td><button name="del">Delete</button></td>  <- Must be named "del"
-                            </tr> 
+                            </tr>
                         -->
                         <tr id='1'>
                             <td>test</td>
@@ -91,5 +91,8 @@
         </main>
         <!-- Client-side Javascript for Button Actions -->
         <script src="../static/buttons.js"></script>
+        <!-- JS for table filtering -->
+        <script src="../static/node_modules/tablefilter/dist/tablefilter/tablefilter.js"></script>
+        <script src="../static/table_filter.js"></script>
     </body>
 </html>
