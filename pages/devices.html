@@ -57,14 +57,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- format for a table row:
+                        <!-- format for a table row: 
                             <tr id='1'> <- ID should be set by retrieving PK from database
                                 <td>test</td> <-- Column data
                                 <td>test</td>
                                 <td>test</td>
                                 <td><button name="edit">Update</button></td> <- Must be named "edit"
                                 <td><button name="del">Delete</button></td>  <- Must be named "del"
-                            </tr>
+                            </tr> 
                         -->
                         <tr id='1'>
                             <td>test</td>
@@ -98,27 +98,9 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <!-- Testing the table filtering -->
-                <script src="../node_modules/tablefilter/dist/tablefilter/tablefilter.js"></script>
-                <script>
-                    var tf = new TableFilter(document.querySelector('#devices'), {
-                        base_path: '../node_modules/tablefilter/dist/tablefilter/',
-                        col_0: 'select',
-                        col_1: 'select',
-                        col_2: 'select',
-                        col_3: 'select',
-                        col_4: 'select',
-                        col_5: 'select',
-                        col_6: 'none',
-                        col_7: 'none'
-                    });
-                    tf.init();
-                </script>
-
             </section>
         </main>
-
+        
         <!-- Client-side Javascript for Button Actions -->
         <script src="../static/script.js"></script>
     </body>
