@@ -1,0 +1,62 @@
+{% extends "base.j2" %}
+{% block title %}Operators{% endblock %}
+{% block header %}
+    {{ super() }}
+    <h1>Operators</h1>
+{% endblock %}
+{% block content %}
+<main>
+    <section class="add">
+        <!-- Allows user to create a new operator and add to the database. -->
+        <h2>Add a new operator</h2>
+        <form>
+            <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
+                    and decide what we need for that. -->
+            <input type="text" placeholder="Operator Name">
+            <input type="text" placeholder="Device ID">
+            <input type="submit" value="Add Operator">
+        </form>
+    </section>
+    <section class="display-data">
+        <!-- Allow user to view all data for the operators in the database.
+                Also allow delete and update of rows. -->
+        <h2>View all operators</h2>
+        <table id="operators">
+            <thead>
+                <tr>
+                    <th>Operator ID</th>
+                    <th>Operator Name</th>
+                    <th>Device ID</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+                <!-- format for a table row:
+                    <tr id='1'> <- ID should be set by retrieving PK from database
+                        <td>test</td> <-- Column data
+                        <td>test</td>
+                        <td>test</td>
+                        <td><button name="edit">Update</button></td> <- Must be named "edit"
+                        <td><button name="del">Delete</button></td>  <- Must be named "del"
+                    </tr>
+                -->
+                {% for row in data %}
+                <tr id="{{ loop.index }}">
+                    {% for key in row.keys() %}
+                    <td>{{ row[key] }}</td>
+                    {% endfor %}
+                    <td><button name="edit">Update</button></td>
+                    <td><button name="del">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+<!-- Client-side Javascript for Button Actions -->
+<script src="../static/buttons.js"></script>
+<!-- JS for table filtering -->
+<script src="../static/node_modules/tablefilter/dist/tablefilter/tablefilter.js"></script>
+<script src="../static/table_filter.js"></script>
+{% endblock %}

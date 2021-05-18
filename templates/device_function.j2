@@ -1,0 +1,59 @@
+{% extends "base.j2" %}
+{% block title %}Functions by Device{% endblock %}
+{% block header %}
+    {{ super() }}
+    <h1>Functions by Device</h1>
+{% endblock %}
+{% block content %}
+<main>
+    <section class="add">
+        <!-- Allows user to create a new device-function relationship and add to the database. -->
+        <h2>Add a new function to device</h2>
+        <form>
+            <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
+                    and decide what we need for that. -->
+            <input type="text" placeholder="Function ID">
+            <input type="text" placeholder="Device ID">
+            <input type="submit" value="Add">
+        </form>
+    </section>
+    <section class="display-data">
+        <!-- Allow user to view all data for the Functions by Device in the database.
+                Also allow user to delete rows. -->
+        <h2>View all functions by device</h2>
+        <table id="function-device">
+            <thead>
+                <tr>
+                    <th>Function Name</th>
+                    <th>Device Name</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- format for a table row:
+                    <tr id='1'> <- ID should be set by retrieving PK from database
+                        <td>test</td> <-- Column data
+                        <td>test</td>
+                        <td>test</td>
+                        <td><button name="edit">Update</button></td> <- Must be named "edit"
+                        <td><button name="del">Delete</button></td>  <- Must be named "del"
+                    </tr>
+                -->
+                {% for row in data %}
+                <tr id="{{ loop.index }}">
+                    {% for key in row.keys() %}
+                    <td>{{ row[key] }}</td>
+                    {% endfor %}
+                    <td><button name="del">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+<!-- Client-side Javascript for Button Actions -->
+<script src="../static/buttons.js"></script>
+<!-- JS for table filtering -->
+<script src="../static/node_modules/tablefilter/dist/tablefilter/tablefilter.js"></script>
+<script src="../static/table_filter.js"></script>
+{% endblock %}
