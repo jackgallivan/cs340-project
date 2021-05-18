@@ -1,0 +1,32 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf-8">
+    <title>NASA RDMS &#8212; {% block title %}{% endblock %}</title>
+    <meta name="description" content="CS340 Project">
+    <meta name="author" content="Jack Gallivan, Richie Stuver">
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<html>
+
+<body>
+    <header>
+        {% block header %}
+        <nav>
+            <!-- Main Navigation for App. Note that nav for index and child pages are slightly different. -->
+            <ul>
+                <a href="/">Home</a>
+                <a href="/devices">Devices</a>
+                <a href="/functions">Functions</a>
+                <a href="/device_function">Functions by Device</a>
+                <a href="/missions">Missions</a>
+                <a href="/locations">Locations</a>
+                <a href="/operators">Operators</a>
+            </ul>
+        </nav>
+        {% endblock % }
+    </header>
+    {% block content %}{% endblock %}
+</body>
+
+</html>
