@@ -5,7 +5,7 @@ Authors: Richie Stuver and Jack Gallivan
 Date Created: 05-18-21
 """
 
-from flask import Flask, render_template
+from flask import Flask, json, render_template, request
 import os
 import database.db_connector as db
 
@@ -39,6 +39,20 @@ def locations():
     query = "SELECT locationID, locationName, localsystem, localBody FROM locations;"
     results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("locations.j2", data=results)
+
+@app.route("/get-dropdown-data")
+def get_dropdown_data():
+    """
+    hit this endpoint to retrieve data for dropdown menus
+    TODO: have method figure out which page made the request. 
+    TODO: send the correct query based on the correct page
+    """
+    request.get_json()
+    print(request.path)
+    query = "SELECT locationName FROM locations;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    print(results)
+    return (json.jsonify(results), 200)
 
 @app.route("/reset")
 def reset_db():
