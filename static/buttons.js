@@ -200,10 +200,10 @@ function addToTable(rowData) {
         td.innerText = rowData[data]
         if (data == 'id') {
             newrow.id = rowData[data]
-            newrow.insertBefore(td, newrow.firstChild)
+            newrow.prepend(td)
         }
         else {
-            newrow.appendChild(td);
+            newrow.append(td);
         }
     }
 
@@ -220,13 +220,13 @@ function addToTable(rowData) {
     bindEdit(editBtn);
     bindDelete(delBtn);
 
-    edit.appendChild(editBtn);
-    del.appendChild(delBtn);
+    edit.append(editBtn);
+    del.append(delBtn);
 
-    newrow.appendChild(edit);
-    newrow.appendChild(del);
+    newrow.append(edit);
+    newrow.append(del);
 
-    tbody.appendChild(newrow);
+    tbody.append(newrow);
 }
 
 function removeFromTable(rowId) {
@@ -258,7 +258,7 @@ function makeEditable(event) {
 
             originalContent[field.name] = field.value;
             child.textContent = '';
-            child.appendChild(field);
+            child.append(field);
 
 
         } else if (child.firstElementChild.name == 'edit') {
