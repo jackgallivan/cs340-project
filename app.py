@@ -67,11 +67,26 @@ def get_dropdown_data():
     TODO: have method figure out which page made the request. 
     TODO: send the correct query based on the correct page
     """
-    print(request.get_json())
     
-    query = "SELECT locationName FROM locations;"
-    results = db.execute_query(db_connection=db_connection, query=query)
-    print(results)
+    valid_dropdowns = {"location": "SELECT locationName FROM locations;", 
+                       "mission": "SELECT missionName FROM missions;", 
+                       "device": "SELECT deviceName FROM devices;"}
+
+    dropdowns = request.get_json()
+    
+    results = {}
+
+    for dropdown in dropdowns: 
+        if dropdown in valid_dropdowns:
+            print("executing query for " + str(dropdown))
+
+            query = valid_dropdowns[dropdown]
+            results[dropdown] = db.execute_query(db_connection=db_connection, query=query)
+            print(results[dropdown])        
+
+    # query = "SELECT locationName FROM locations;"
+    # results = db.execute_query(db_connection=db_connection, query=query)
+    # print(results)
     return (json.jsonify(results), 200)
     
 @app.route("/operators")
