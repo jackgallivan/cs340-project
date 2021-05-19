@@ -68,9 +68,10 @@ def get_dropdown_data():
     TODO: send the correct query based on the correct page
     """
     
-    valid_dropdowns = {"location": "SELECT locationName FROM locations;", 
-                       "mission": "SELECT missionName FROM missions;", 
-                       "device": "SELECT deviceName FROM devices;"}
+    valid_dropdowns = {"locationName": "SELECT locationName FROM locations;", 
+                       "missionName": "SELECT missionName FROM missions;", 
+                       "deviceName": "SELECT deviceName FROM devices;",
+                       "functionName": "SELECT functionName FROM functions;"}
 
     dropdowns = request.get_json()
     
@@ -78,11 +79,11 @@ def get_dropdown_data():
 
     for dropdown in dropdowns: 
         if dropdown in valid_dropdowns:
-            print("executing query for " + str(dropdown))
+            # print("executing query for " + str(dropdown))
 
             query = valid_dropdowns[dropdown]
             results[dropdown] = db.execute_query(db_connection=db_connection, query=query)
-            print(results[dropdown])        
+            # print(results[dropdown])        
 
     # query = "SELECT locationName FROM locations;"
     # results = db.execute_query(db_connection=db_connection, query=query)
