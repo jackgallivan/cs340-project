@@ -7,6 +7,7 @@ Date Created: 05-18-21
 
 from flask import Flask, json, render_template, request, abort
 import os
+from urllib.parse import urlparse
 import database.db_connector as db
 
 
@@ -118,45 +119,46 @@ def add_data():
     # Get the data in the request object (to be added to a table)
     # and the root_path, which is the page we are requesting from.
     data = request.get_json()
+    print("data: ")
+    print(data)
     # root_path = request.script_root
-    print("path is: " + request.path)
-    print("root url is: " + request.url_root)
-    abort(500)
+    referrer_path = urlparse(request.referrer).path
+    print("referer_path: " + referrer_path)
     # Create the INSERT query, dependent on the root_path
-    if root_path == '/devices':
+    if referrer_path == '/devices':
         query = (f"INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
-                 f"VALUES ({data.deviceName}, "
-                 f"{data.dateLaunched}, "
-                 f"{data.manufacturer}, "
-                 f"(SELECT locationID FROM locations WHERE locationName = {data.locationName}), "
-                 f"(SELECT missionID FROM missions WHERE missionName = {data.missionName}) "
+                 f"VALUES ('{data['deviceName']}', "
+                 f"'{data['dateLaunched']}', "
+                 f"'{data['manufacturer']}', "
+                 f"(SELECT locationID FROM locations WHERE locationName = '{data['locationName']}'), "
+                 f"(SELECT missionID FROM missions WHERE missionName = '{data['missionName']}') "
                  f");")
 
-    elif root_path == '/functions':
+    elif referrer_path == '/functions':
         query = (f"INSERT INTO functions (functionName, description) "
-                 f"VALUES ({data.functionName}, {data.description});")
+                 f"VALUES ('{data['functionName']}', '{data['description']}');")
 
-    elif root_path == '/device_function':
+    elif referrer_path == '/device_function':
         query = (f"INSERT INTO device_function (deviceID, functionID) "
-                 f"VALUES ((SELECT deviceID FROM devices WHERE deviceName = {data.deviceName}), "
-                 f"(SELECT functionID FROM functions WHERE functionName = {data.functionName}) "
+                 f"VALUES ((SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}'), "
+                 f"(SELECT functionID FROM functions WHERE functionName = '{data['functionName']}') "
                  f");")
 
-    elif root_path == '/missions':
+    elif referrer_path == '/missions':
         query = (f"INSERT INTO missions (missionName, objective, locationID) "
-                 f"VALUES ({data.missionName}, "
-                 f"{data.objective}, "
-                 f"(SELECT locationID FROM locations WHERE locationName = {data.locationName}) "
+                 f"VALUES ('{data['missionName']}', "
+                 f"'{data['objective']}', "
+                 f"(SELECT locationID FROM locations WHERE locationName = '{data['locationName']}') "
                  f");")
 
-    elif root_path == '/locations':
-        query = (f"INSERT INTO locations (locationName, localsystem, localBody) "
-                 f"VALUES ({data.locationName}, {data.localsystem}, {data.localBody});")
+    elif referrer_path == '/locations':
+        query = (f"INSERT INTO locations (locationName, localSystem, localBody) "
+                 f"VALUES ('{data['locationName']}', '{data['localSystem']}', '{data['localBody']}');")
 
-    elif root_path == '/operators':
+    elif referrer_path == '/operators':
         query = (f"INSERT INTO operators (operatorName, deviceID) "
-                 f"VALUES ({data.operatorName}, "
-                 f"(SELECT deviceID FROM devices WHERE deviceName = {data.deviceName}) "
+                 f"VALUES ('{data['operatorName']}', "
+                 f"(SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
                  f");")
 
     else:
@@ -164,7 +166,7 @@ def add_data():
     # Execute the query, then check that a row was added.
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = {}
-    results.id = cursor.lastrowid
+    results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
         # ERROR: no row inserted
         abort(500)
