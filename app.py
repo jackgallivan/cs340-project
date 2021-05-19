@@ -5,7 +5,7 @@ Authors: Richie Stuver and Jack Gallivan
 Date Created: 05-18-21
 """
 
-from flask import Flask, json, render_template, request
+from flask import Flask, json, render_template, request, abort
 import os
 import database.db_connector as db
 
@@ -18,53 +18,69 @@ db_connection = db.connect_to_database()
 
 # Routes
 
+# GET Handlers
+
 @app.route("/")
 def root():
     return render_template("index.j2")
 
 @app.route("/devices")
 def devices_route():
-    query = "SELECT deviceID, deviceName, dateLaunched, manufacturer, locationName, missionName \
-            FROM devices \
-            JOIN locations ON devices.locationID = locations.locationID \
-            JOIN missions ON devices.missionID = missions.missionID;"
-    results = db.execute_query(db_connection=db_connection, query=query)
+    query = ("SELECT deviceID, deviceName, dateLaunched, manufacturer, locationName, missionName "
+             "FROM devices "
+             "JOIN locations ON devices.locationID = locations.locationID "
+             "JOIN missions ON devices.missionID = missions.missionID;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
     return render_template("devices.j2", data=results)
 
 @app.route("/functions")
 def functions_route():
-    query = "SELECT functionID, functionName, description \
-            FROM functions;"
-    results = db.execute_query(db_connection=db_connection, query=query)
+    query = ("SELECT functionID, functionName, description "
+             "FROM functions;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
     return render_template("functions.j2", data=results)
 
 @app.route("/device_function")
 def device_function_route():
-    query = "SELECT deviceName, functionName FROM device_function \
-            JOIN devices ON device_function.deviceID = devices.deviceID \
-            JOIN functions ON device_function.functionID = functions.functionID;"
-    results = db.execute_query(db_connection=db_connection, query=query)
+    query = ("SELECT deviceName, functionName FROM device_function "
+             "JOIN devices ON device_function.deviceID = devices.deviceID "
+             "JOIN functions ON device_function.functionID = functions.functionID;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
     return render_template("device_function.j2", data=results)
 
 @app.route("/missions")
 def missions_route():
-    query = "SELECT missionID, missionName, objective, locationName \
-            FROM missions JOIN locations ON missions.locationID = locations.locationID;"
-    results = db.execute_query(db_connection=db_connection, query=query)
+    query = ("SELECT missionID, missionName, objective, locationName "
+             "FROM missions JOIN locations ON missions.locationID = locations.locationID;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
     return render_template("missions.j2", data=results)
 
 @app.route("/locations")
 def locations_route():
-    query = "SELECT locationID, locationName, localsystem, localBody \
-            FROM locations;"
-    results = db.execute_query(db_connection=db_connection, query=query)
+    query = ("SELECT locationID, locationName, localsystem, localBody "
+             "FROM locations;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
     return render_template("locations.j2", data=results)
 
-@app.route("/get-dropdown-data", methods=['POST'])
+@app.route("/operators")
+def operators_route():
+    query = ("SELECT operatorID, operatorName, deviceName "
+             "FROM operators "
+             "JOIN devices ON operators.deviceID = devices.deviceID;")
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    return render_template("operators.j2", data=results)
+
+@app.route("/get-dropdown-data")
 def get_dropdown_data():
     """
     hit this endpoint to retrieve data for dropdown menus
-    TODO: have method figure out which page made the request. 
+    TODO: have method figure out which page made the request.
     TODO: send the correct query based on the correct page
     """
     
@@ -88,14 +104,6 @@ def get_dropdown_data():
     # results = db.execute_query(db_connection=db_connection, query=query)
     # print(results)
     return (json.jsonify(results), 200)
-    
-@app.route("/operators")
-def operators_route():
-    query = "SELECT operatorID, operatorName, deviceName \
-            FROM operators \
-            JOIN devices ON operators.deviceID = devices.deviceID;"
-    results = db.execute_query(db_connection=db_connection, query=query)
-    return render_template("operators.j2", data=results)
 
 @app.route("/reset")
 def reset_db():
@@ -111,6 +119,75 @@ def reset_db():
         multi_cursor.close()
 
     return "Reset successful!"
+
+
+# POST Handlers
+
+@app.route("/add-data", methods=['POST'])
+def add_data():
+    """
+    Accessed for INSERT DB operations.
+    """
+    # Get the data in the request object (to be added to a table)
+    # and the root_path, which is the page we are requesting from.
+    data = request.get_json()
+    root_path = request.root_path
+    # Create the INSERT query, dependent on the root_path
+    if root_path == '/devices':
+        query = (f"INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
+                 f"VALUES ({data.deviceName}, "
+                 f"{data.dateLaunched}, "
+                 f"{data.manufacturer}, "
+                 f"(SELECT locationID FROM locations WHERE locationName = {data.locationName}), "
+                 f"(SELECT missionID FROM missions WHERE missionName = {data.missionName}) "
+                 f");")
+
+    elif root_path == '/functions':
+        query = (f"INSERT INTO functions (functionName, description) "
+                 f"VALUES ({data.functionName}, {data.description});")
+
+    elif root_path == '/device_function':
+        query = (f"INSERT INTO device_function (deviceID, functionID) "
+                 f"VALUES ((SELECT deviceID FROM devices WHERE deviceName = {data.deviceName}), "
+                 f"(SELECT functionID FROM functions WHERE functionName = {data.functionName}) "
+                 f");")
+
+    elif root_path == '/missions':
+        query = (f"INSERT INTO missions (missionName, objective, locationID) "
+                 f"VALUES ({data.missionName}, "
+                 f"{data.objective}, "
+                 f"(SELECT locationID FROM locations WHERE locationName = {data.locationName}) "
+                 f");")
+
+    elif root_path == '/locations':
+        query = (f"INSERT INTO locations (locationName, localsystem, localBody) "
+                 f"VALUES ({data.locationName}, {data.localsystem}, {data.localBody});")
+
+    elif root_path == '/operators':
+        query = (f"INSERT INTO operators (operatorName, deviceID) "
+                 f"VALUES ({data.operatorName}, "
+                 f"(SELECT deviceID FROM devices WHERE deviceName = {data.deviceName}) "
+                 f");")
+
+    # Execute the query, then check that a row was added.
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = {}
+    results.id = cursor.lastrowid
+    if cursor.rowcount == 0:
+        # ERROR: no row inserted
+        abort(500)
+    return (json.jsonify(results), 200)
+
+
+# Error Handlers
+
+@app.errorhandler(404)
+def not_found(error):
+    return ("404: page not found", 404)
+
+@app.errorhandler(500)
+def server_error(error):
+    return ("500: Internal server error", 500)
 
 
 # Listener

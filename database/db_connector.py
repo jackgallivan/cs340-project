@@ -52,9 +52,8 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     cursor.execute(query, query_params)
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
-    results = cursor.fetchall()
     db_connection.commit()
-    return results
+    return cursor
 
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")

@@ -12,7 +12,7 @@
         <form>
             <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
                     and decide what we need for that. -->
-            <input type="text" placeholder="Device Name">
+            <input class="add-input" type="text" name="deviceName" placeholder="Device Name">
             <label for="dateLaunched">Date Launched</label>
             <input type="date" name="dateLaunched" placeholder="Date Launched">
             <input type="text" placeholder="Manufacturer">
@@ -22,7 +22,8 @@
             <select name="mission" id="addMission">
                 <option value="">--Please choose an option--</option>
             </select>
-            <input type="submit" value="Add device">
+            <input class="add-input" type="text" name="manufacturer" placeholder="Manufacturer">
+            <input id="add" type="submit" value="Add device">
         </form>
     </section>
     <section class="display-data">
