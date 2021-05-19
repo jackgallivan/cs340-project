@@ -6,16 +6,18 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # Set the variables in our application with those environment variables
-host = os.environ.get("340DBHOST")
-user = os.environ.get("340DBUSER")
-passwd = os.environ.get("340DBPW")
-db = os.environ.get("340DB")
+dbconfig = {
+    'host': os.environ.get("340DBHOST"),
+    'user': os.environ.get("340DBUSER"),
+    'passwd': os.environ.get("340DBPW"),
+    'db': os.environ.get("340DB")
+}
 
-def connect_to_database(host = host, user = user, passwd = passwd, db = db):
+def connect_to_database(pool_name = 'mypool', pool_size = 10, dbconfig = dbconfig):
     '''
     connects to a database and returns a database objects
     '''
-    db_connection = mysql.connector.connect(host=host,user=user,password=passwd,db=db)
+    db_connection = mysql.connector.connect(pool_name = 'mypool', pool_size = 10, **dbconfig)
     return db_connection
 
 def execute_query(db_connection = None, query = None, query_params = ()):
