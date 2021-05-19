@@ -1,21 +1,21 @@
-document.addEventListener("DOMContentLoaded", bindButtons);
-document.addEventListener("DOMContentLoaded", getDropdownData);
+document.addEventListener('DOMContentLoaded', bindButtons);
+document.addEventListener('DOMContentLoaded', getDropdownData);
 
 // BUTTON BINDINGS (ON PAGE LOAD)
 
 function bindAdd(btn) {
-    
-    btn.addEventListener("click", function(event) {
+
+    btn.addEventListener('click', function(event) {
         console.log(event);
-        addRow()
+        addRow(btn)
         event.preventDefault;
         }
     );
 }
 
 function bindDelete(btn) {
-    
-    btn.addEventListener("click", function(event) {
+
+    btn.addEventListener('click', function(event) {
         console.log(event);
         deleteRow(event);
         event.preventDefault;
@@ -24,8 +24,8 @@ function bindDelete(btn) {
 }
 
 function bindEdit(btn) {
-    
-    btn.addEventListener("click", function(event) {
+
+    btn.addEventListener('click', function(event) {
         console.log(event);
         makeEditable(event);
         event.preventDefault;
@@ -34,7 +34,7 @@ function bindEdit(btn) {
 }
 
 function bindSubmitEdit(btn) {
-    btn.addEventListener("click", function(event) {
+    btn.addEventListener('click', function(event) {
         console.log(event);
         submitEdit(event);
         event.preventDefault;
@@ -43,7 +43,7 @@ function bindSubmitEdit(btn) {
 }
 
 function bindCancelEdit(btn, originalContent) {
-    btn.addEventListener("click", function(event) {
+    btn.addEventListener('click', function(event) {
         console.log(event);
         cancelEdit(event, originalContent);
         event.preventDefault;
@@ -52,25 +52,25 @@ function bindCancelEdit(btn, originalContent) {
 }
 
 function bindButtons() {
-    // let add = document.getElementById("add");
-    // bindAdd(add);
+    let add = document.getElementById('add');
+    bindAdd(add);
 
-    let del = document.getElementsByName("del");
+    let del = document.getElementsByName('del');
     for (let d of del) {
         bindDelete(d);
     }
-    
-    let edit = document.getElementsByName("edit");
+
+    let edit = document.getElementsByName('edit');
     for (let e of edit) {
         bindEdit(e);
     }
-    
+
 }
 
 // REQUEST HANDLERS
 
 // NOTE: only edit and cancel edit buttons are working (UI only)
-// TO DO: 
+// TO DO:
 // - refactor add and delete buttons (UI)
 // - eventually need to integrate with our backend
 
@@ -86,36 +86,29 @@ function getDropdownData() {
             rowData.id = JSON.parse(req.responseText)['id'];
             addToTable(rowData);
         } else {
-            console.log("looks like an error happened");
+            console.log('looks like an error happened');
         }
     });
 
-    req.send(JSON.stringify(location.href.split("/").pop()));
+    req.send(JSON.stringify(location.href.split('/').pop()));
 }
 
 
-function addRow() {
+function addRow(btn) {
 
-    // get data out of the form and add to an object
-    let rowData = {};
-    let name = document.getElementById("add-name").value;
-    let reps = document.getElementById("add-reps").value;
-    let weight = document.getElementById("add-weight").value;
-    let date = document.getElementById("add-date").value;
-    let units = document.getElementById("add-units").value;
+    const rowData = {}
 
-    rowData.name = name;
-    rowData.reps = reps;
-    rowData.weight = weight;
-    rowData.date = date;
-    rowData.units = units;
-    if (units == "lbs") {
-        rowData.lbs = 1;
-    } else {rowData.lbs = 0;}
+    // Get data elements in the form.
+    const formElements = btn.parentNode.querySelectorAll('.add-input')
+
+    // Add the element values to the request body.
+    formElements.forEach(element => {
+        rowData[element.name] = element.value
+    })
 
     // Open up a request and send to the app
     let req = new XMLHttpRequest();
-    url = ''
+    url = '/add-data'
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
@@ -124,12 +117,12 @@ function addRow() {
             rowData.id = JSON.parse(req.responseText)['id'];
             addToTable(rowData);
         } else {
-            console.log("looks like an error happened");
+            console.log('looks like an error happened');
         }
     });
 
     req.send(JSON.stringify(rowData));
-}  
+}
 
 function submitEdit(event) {
     // buttons are nested in <td> which is in a <tr>
@@ -140,11 +133,11 @@ function submitEdit(event) {
     let body = {};
     body['id'] = rowId;
     for (let element of row.children) {
-        if (element.firstElementChild.tagName == "INPUT") {
+        if (element.firstElementChild.tagName == 'INPUT') {
             let name = element.firstElementChild.getAttribute('name');
             let value = element.firstElementChild.value;
             body[name] = value;
-        }     
+        }
     }
 
     // Open up a request and send to the app
@@ -157,7 +150,7 @@ function submitEdit(event) {
             console.log(req.responseText);
             cancelEdit(event);
         } else {
-            console.log("looks like an error happened");
+            console.log('looks like an error happened');
             cancelEdit(event, body);
         }
     });
@@ -169,7 +162,7 @@ function deleteRow(event) {
     let tableRow = event.target.parentElement.parentElement;
     let rowId = tableRow.id;
 
-    // NOTE: No database backend currently set up. 
+    // NOTE: No database backend currently set up.
     // Use the below code INSTEAD of directly calling
     // the removeFromTable(rowId) function once
     // backend is live
@@ -199,30 +192,30 @@ function deleteRow(event) {
 
 function addToTable(rowData) {
     // present the data as a new tableRow in the table
-    let table = document.getElementById("row-table");
-    newrow = document.createElement("tr");
+    const tbody = document.querySelector('tbody');
+    newrow = document.createElement('tr');
     for (let data in rowData) {
-
+        const td = document.createElement('td')
+        td.setAttribute('name', data)
+        td.innerText = rowData[data]
         if (data == 'id') {
-            newrow.id = rowData[data];
+            newrow.id = rowData[data]
+            newrow.insertBefore(td, newrow.firstChild)
         }
-        else if (data != 'lbs') {
-            let td = document.createElement('td');
-            td.setAttribute('name', data);
-            td.innerText = rowData[data];
+        else {
             newrow.appendChild(td);
         }
     }
 
-    let edit = document.createElement('td');
-    let del = document.createElement('td');
-    let editBtn = document.createElement('button');
-    let delBtn = document.createElement('button');
+    const edit = document.createElement('td');
+    const del = document.createElement('td');
+    const editBtn = document.createElement('button');
+    const delBtn = document.createElement('button');
 
-    editBtn.name = "edit";
-    delBtn.name = "del";
-    editBtn.textContent = "Edit";
-    delBtn.textContent = "Delete";
+    editBtn.name = 'edit';
+    delBtn.name = 'del';
+    editBtn.textContent = 'Update';
+    delBtn.textContent = 'Delete';
 
     bindEdit(editBtn);
     bindDelete(delBtn);
@@ -232,13 +225,13 @@ function addToTable(rowData) {
 
     newrow.appendChild(edit);
     newrow.appendChild(del);
-    
-    table.appendChild(newrow);
+
+    tbody.appendChild(newrow);
 }
 
 function removeFromTable(rowId) {
-    // pass in the id of the table tableRow to be removed. 
-    let tbody = document.getElementById("data-table");
+    // pass in the id of the table tableRow to be removed.
+    let tbody = document.getElementById('data-table');
     let row = document.getElementById(rowId);
     tbody.removeChild(row);
 }
@@ -256,30 +249,30 @@ function makeEditable(event) {
             let field = document.createElement('input');
             field.name = child.getAttribute('name');
             if (child.getAttribute('name') == 'date') {
-                field.type = "date";
+                field.type = 'date';
                 field.value = child.textContent;
             } else {
-                field.type = "text";
+                field.type = 'text';
                 field.value = child.textContent;
             }
-            
+
             originalContent[field.name] = field.value;
             child.textContent = '';
-            child.appendChild(field);  
-                  
+            child.appendChild(field);
 
-        } else if (child.firstElementChild.name == "edit") {
+
+        } else if (child.firstElementChild.name == 'edit') {
             let submitBtn = document.createElement('button');
-            submitBtn.name = "submit";
-            submitBtn.textContent = "Submit";
+            submitBtn.name = 'submit';
+            submitBtn.textContent = 'Submit';
             bindSubmitEdit(submitBtn);
 
             child.replaceChild(submitBtn, child.firstElementChild);
 
-        } else if (child.firstElementChild.name == "del") {
+        } else if (child.firstElementChild.name == 'del') {
             let cancelBtn = document.createElement('button');
             cancelBtn.name = 'cancel';
-            cancelBtn.textContent = "Cancel";
+            cancelBtn.textContent = 'Cancel';
             bindCancelEdit(cancelBtn, originalContent);
 
             child.replaceChild(cancelBtn, child.firstElementChild);
@@ -297,31 +290,31 @@ function cancelEdit(event, originalContent) {
 
     // cycle through only ELEMENT nodes (given by .children)
     for (let child of row.children) {
-        if (child.firstElementChild.tagName == "INPUT") {
+        if (child.firstElementChild.tagName == 'INPUT') {
             let content = child.firstChild.value;
             child.removeChild(child.firstElementChild);
 
             if (originalContent) {
                 child.textContent = originalContent[child.getAttribute('name')]
             } else {
-                child.textContent = content;     
+                child.textContent = content;
             }
-            
 
-        } else if (child.firstElementChild.name == "submit") {
+
+        } else if (child.firstElementChild.name == 'submit') {
             let editBtn = document.createElement('button');
 
-            editBtn.name = "edit";
-            editBtn.textContent = "Update";
+            editBtn.name = 'edit';
+            editBtn.textContent = 'Update';
 
             bindEdit(editBtn);
             child.replaceChild(editBtn, child.firstElementChild);
 
-        } else if (child.firstElementChild.name == "cancel") {
+        } else if (child.firstElementChild.name == 'cancel') {
             let delBtn = document.createElement('button');
 
-            delBtn.name = "del";
-            delBtn.textContent = "Delete";
+            delBtn.name = 'del';
+            delBtn.textContent = 'Delete';
 
             bindDelete(delBtn);
             child.replaceChild(delBtn, child.firstElementChild);
