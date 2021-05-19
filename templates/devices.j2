@@ -12,13 +12,13 @@
         <form>
             <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
                     and decide what we need for that. -->
-            <input type="text" placeholder="Device Name">
+            <input class="add-input" type="text" name="deviceName" placeholder="Device Name">
             <label for="dateLaunched">Date Launched</label>
-            <input type="date" name="dateLaunched" placeholder="Date Launched">
-            <input type="text" placeholder="Manufacturer">
-            <input type="text" placeholder="Location ID">
-            <input type="text" placeholder="Mission ID">
-            <input type="submit" value="Add device">
+            <input class="add-input" type="date" name="dateLaunched" placeholder="Date Launched">
+            <input class="add-input" type="text" name="manufacturer" placeholder="Manufacturer">
+            <input class="add-input" type="text" name="locationName" placeholder="Location Name">
+            <input class="add-input" type="text" name="missionName" placeholder="Mission Name">
+            <input id="add" type="submit" value="Add device">
         </form>
     </section>
     <section class="display-data">
