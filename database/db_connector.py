@@ -40,7 +40,7 @@ def execute_query(db_connection = None, query = None, query_params = ()):
 
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor(dictionary=True)
+    cursor = db_connection.cursor(dictionary=True, buffered=True)
 
     '''
     params = tuple()
@@ -50,11 +50,10 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     '''
     #TODO: Sanitize the query before executing it!!!
     cursor.execute(query, query_params)
-    results = cursor.fetchall()
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit()
-    return results
+    return cursor
 
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")
