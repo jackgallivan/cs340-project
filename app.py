@@ -158,7 +158,7 @@ def add_data():
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = {}
     results.id = cursor.lastrowid
-    if results.id is None:
+    if cursor.rowcount == 0:
         # ERROR: no row inserted
         abort(500)
     return (json.jsonify(results), 200)
