@@ -287,38 +287,43 @@ function makeEditable(event) {
     let originalContent = {};
 
     let row = document.getElementById(rowId);
+    let exclude = ["deviceID", "locationID", "missionID", "functionID", "operatorID"];
+    console.log(exclude);
     for (let child of row.children) {
-        if (!child.firstElementChild) {
-            let field = document.createElement('input');
-            field.name = child.getAttribute('name');
-            if (child.getAttribute('name') == 'date') {
-                field.type = 'date';
-                field.value = child.textContent;
-            } else {
-                field.type = 'text';
-                field.value = child.textContent;
+        if (!(exclude.includes(child.getAttribute('name')))) {
+            if (!child.firstElementChild) {
+                console.log(child.getAttribute('name'));
+                let field = document.createElement('input');
+                field.name = child.getAttribute('name');
+                if (child.getAttribute('name') == 'date') {
+                    field.type = 'date';
+                    field.value = child.textContent;
+                } else {
+                    field.type = 'text';
+                    field.value = child.textContent;
+                }
+
+                originalContent[field.name] = field.value;
+                child.textContent = '';
+                child.append(field);
+
+
+            } else if (child.firstElementChild.name == 'edit') {
+                let submitBtn = document.createElement('button');
+                submitBtn.name = 'submit';
+                submitBtn.textContent = 'Submit';
+                bindSubmitEdit(submitBtn);
+
+                child.replaceChild(submitBtn, child.firstElementChild);
+
+            } else if (child.firstElementChild.name == 'del') {
+                let cancelBtn = document.createElement('button');
+                cancelBtn.name = 'cancel';
+                cancelBtn.textContent = 'Cancel';
+                bindCancelEdit(cancelBtn, originalContent);
+
+                child.replaceChild(cancelBtn, child.firstElementChild);
             }
-
-            originalContent[field.name] = field.value;
-            child.textContent = '';
-            child.append(field);
-
-
-        } else if (child.firstElementChild.name == 'edit') {
-            let submitBtn = document.createElement('button');
-            submitBtn.name = 'submit';
-            submitBtn.textContent = 'Submit';
-            bindSubmitEdit(submitBtn);
-
-            child.replaceChild(submitBtn, child.firstElementChild);
-
-        } else if (child.firstElementChild.name == 'del') {
-            let cancelBtn = document.createElement('button');
-            cancelBtn.name = 'cancel';
-            cancelBtn.textContent = 'Cancel';
-            bindCancelEdit(cancelBtn, originalContent);
-
-            child.replaceChild(cancelBtn, child.firstElementChild);
         }
     }
 }
@@ -331,34 +336,35 @@ function cancelEdit(event, originalContent) {
 
     // cycle through only ELEMENT nodes (given by .children)
     for (let child of row.children) {
-        
-        if (child.firstElementChild.tagName == 'INPUT') {
-            content = child.firstElementChild.value;
-            child.removeChild(child.firstElementChild);
+        if (child.firstElementChild) {
+            if (child.firstElementChild.tagName == 'INPUT') {
+                content = child.firstElementChild.value;
+                child.removeChild(child.firstElementChild);
 
-            if (originalContent) {
-                child.textContent = originalContent[child.getAttribute('name')]
-            } else {
-                child.textContent = content;
+                if (originalContent) {
+                    child.textContent = originalContent[child.getAttribute('name')]
+                } else {
+                    child.textContent = content;
+                }
+
+            } else if (child.firstElementChild.name == 'submit') {
+                let editBtn = document.createElement('button');
+
+                editBtn.name = 'edit';
+                editBtn.textContent = 'Update';
+
+                bindEdit(editBtn);
+                child.replaceChild(editBtn, child.firstElementChild);
+
+            } else if (child.firstElementChild.name == 'cancel') {
+                let delBtn = document.createElement('button');
+
+                delBtn.name = 'del';
+                delBtn.textContent = 'Delete';
+
+                bindDelete(delBtn);
+                child.replaceChild(delBtn, child.firstElementChild);
             }
-
-        } else if (child.firstElementChild.name == 'submit') {
-            let editBtn = document.createElement('button');
-
-            editBtn.name = 'edit';
-            editBtn.textContent = 'Update';
-
-            bindEdit(editBtn);
-            child.replaceChild(editBtn, child.firstElementChild);
-
-        } else if (child.firstElementChild.name == 'cancel') {
-            let delBtn = document.createElement('button');
-
-            delBtn.name = 'del';
-            delBtn.textContent = 'Delete';
-
-            bindDelete(delBtn);
-            child.replaceChild(delBtn, child.firstElementChild);
         }
     }
 }
