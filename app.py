@@ -60,15 +60,15 @@ def locations_route():
     results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("locations.j2", data=results)
 
-@app.route("/get-dropdown-data")
+@app.route("/get-dropdown-data", methods=['POST'])
 def get_dropdown_data():
     """
     hit this endpoint to retrieve data for dropdown menus
     TODO: have method figure out which page made the request. 
     TODO: send the correct query based on the correct page
     """
-    request.get_json()
-    print(request.path)
+    print(request.get_json())
+    
     query = "SELECT locationName FROM locations;"
     results = db.execute_query(db_connection=db_connection, query=query)
     print(results)

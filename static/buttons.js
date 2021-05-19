@@ -83,14 +83,23 @@ function getDropdownData() {
     req.addEventListener('load', () => {
         if (req.status < 400) {
             console.log(req.responseText);
-            rowData.id = JSON.parse(req.responseText)['id'];
-            addToTable(rowData);
+            // rowData.id = JSON.parse(req.responseText)['id'];
+            // addToTable(rowData);
         } else {
             console.log("looks like an error happened");
         }
     });
 
-    req.send(JSON.stringify(location.href.split("/").pop()));
+    dropdowns = document.getElementsByTagName('select');
+    data = [];
+    for (el in dropdowns) {
+        data.push(dropdowns[el]["name"]);
+    }
+    console.log(data)
+    console.log(dropdowns);
+    req.send(JSON.stringify(data));
+
+    // req.send(JSON.stringify(location.href.split("/").pop()));
 }
 
 
