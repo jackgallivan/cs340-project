@@ -42,8 +42,11 @@ def reset_db():
     """
 
     with open("database/load_db.sql", 'r') as file:
+        # db.execute_query(db_connection=db_connection, query=file.read())
         multi_cursor = db_connection.cursor()
-        multi_cursor.execute(file.read(), multi=True)
+        for result in multi_cursor.execute(file.read(), multi=True):
+            result.fetchall()
+        db_connection.commit()
         multi_cursor.close()
     
     return "Reset successful!"
