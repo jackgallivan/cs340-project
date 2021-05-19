@@ -16,8 +16,12 @@
             <label for="dateLaunched">Date Launched</label>
             <input class="add-input" type="date" name="dateLaunched" placeholder="Date Launched">
             <input class="add-input" type="text" name="manufacturer" placeholder="Manufacturer">
-            <input class="add-input" type="text" name="locationName" placeholder="Location Name">
-            <input class="add-input" type="text" name="missionName" placeholder="Mission Name">
+            <select class="add-input" name="locationName" id="addLocation">
+                <option value="">--Location Name--</option>
+            </select>
+            <select class="add-input" name="missionName" id="addMission">
+                <option value="">--Mission Name--</option>
+            </select>
             <input id="add" type="submit" value="Add device">
         </form>
     </section>

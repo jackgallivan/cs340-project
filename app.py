@@ -70,18 +70,34 @@ def operators_route():
     results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("operators.j2", data=results)
 
-@app.route("/get-dropdown-data")
+@app.route("/get-dropdown-data", methods=["POST"])
 def get_dropdown_data():
     """
     hit this endpoint to retrieve data for dropdown menus
     TODO: have method figure out which page made the request.
     TODO: send the correct query based on the correct page
     """
-    request.get_json()
-    print(request.path)
-    query = "SELECT locationName FROM locations;"
-    results = db.execute_query(db_connection=db_connection, query=query)
-    print(results)
+    
+    valid_dropdowns = {"locationName": "SELECT locationName FROM locations;", 
+                       "missionName": "SELECT missionName FROM missions;", 
+                       "deviceName": "SELECT deviceName FROM devices;",
+                       "functionName": "SELECT functionName FROM functions;"}
+
+    dropdowns = request.get_json()
+    
+    results = {}
+
+    for dropdown in dropdowns: 
+        if dropdown in valid_dropdowns:
+            # print("executing query for " + str(dropdown))
+
+            query = valid_dropdowns[dropdown]
+            results[dropdown] = db.execute_query(db_connection=db_connection, query=query)
+            # print(results[dropdown])        
+
+    # query = "SELECT locationName FROM locations;"
+    # results = db.execute_query(db_connection=db_connection, query=query)
+    # print(results)
     return (json.jsonify(results), 200)
 
 @app.route("/reset")

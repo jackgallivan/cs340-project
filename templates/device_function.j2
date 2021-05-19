@@ -12,8 +12,12 @@
         <form>
             <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
                     and decide what we need for that. -->
-            <input class="add-input" type="text" name="functionName" placeholder="Function Name">
-            <input class="add-input" type="text" name="deviceName" placeholder="Device Name">
+            <select class="add-input" name="functionName" id="addFunction">
+                <option value="">--Function Name--</option>
+            </select>
+            <select class="add-input" name="deviceName" id="addDevice">
+                <option value="">--Device Name--</option>
+            </select>
             <input id="add" type="submit" value="Add">
         </form>
     </section>

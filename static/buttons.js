@@ -82,15 +82,58 @@ function getDropdownData() {
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
         if (req.status < 400) {
-            console.log(req.responseText);
-            rowData.id = JSON.parse(req.responseText)['id'];
-            addToTable(rowData);
+            console.log('request successful')
+            response = JSON.parse(req.responseText);
+            
+            console.log(response);
+            dropdowns = document.getElementsByTagName('select');
+            for (dropdown in dropdowns) {
+                dropdownName = dropdowns[dropdown].name;
+                console.log(dropdownName);
+                if (dropdownName in response) {
+                    data = response[dropdownName]
+                    console.log(response[dropdownName]);
+                    for (option in data) {
+                        value = data[option][dropdownName];
+                        console.log(data[option][dropdownName]);
+                        el = document.createElement('option');
+                        el.value = value;
+                        el.innerText = value;
+                        dropdowns[dropdown].appendChild(el);
+                    }
+                    // for (option in response[dropdown.name]) {
+                    //     console.log(option);
+                    // }
+                }
+            }
+
+            // for (data in response) {
+            //     console.log(data, response[data]);
+            // }
+            // () => {
+            //     dropdowns = document.getElementsByTagName('select');
+            //     for (el in dropdowns) {
+            //         for (option in JSON.parse(req.responseText)[dropdowns[el]]) {
+            //             new_option = document.createElement('option');
+            //             console.log(option)
+            //         }
+            //     }
+            // }
         } else {
             console.log('looks like an error happened');
         }
     });
 
-    req.send(JSON.stringify(location.href.split('/').pop()));
+    dropdowns = document.getElementsByTagName('select');
+    data = [];
+    for (el in dropdowns) {
+        data.push(dropdowns[el]["name"]);
+    }
+    // console.log(data)
+    // console.log(dropdowns);
+    req.send(JSON.stringify(data));
+
+    // req.send(JSON.stringify(location.href.split("/").pop()));
 }
 
 
