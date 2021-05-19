@@ -18,54 +18,57 @@ db_connection = db.connect_to_database()
 
 # Routes
 
+# GET Handlers
+
 @app.route("/")
 def root():
     return render_template("index.j2")
 
-@app.route("/devices", methods=['GET', 'POST'])
+@app.route("/devices")
 def devices_route():
-    if request.method == 'GET':
-        query = "SELECT deviceID, deviceName, dateLaunched, manufacturer, locationName, missionName \
-                FROM devices \
-                JOIN locations ON devices.locationID = locations.locationID \
-                JOIN missions ON devices.missionID = missions.missionID;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("devices.j2", data=results)
-    else:
-        pass #todo: POST method
+    query = "SELECT deviceID, deviceName, dateLaunched, manufacturer, locationName, missionName \
+            FROM devices \
+            JOIN locations ON devices.locationID = locations.locationID \
+            JOIN missions ON devices.missionID = missions.missionID;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("devices.j2", data=results)
 
-@app.route("/functions", methods=['GET', 'POST'])
+@app.route("/functions")
 def functions_route():
-    if request.method == 'GET':
-        query = "SELECT functionID, functionName, description \
-                FROM functions;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("functions.j2", data=results)
+    query = "SELECT functionID, functionName, description \
+            FROM functions;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("functions.j2", data=results)
 
-@app.route("/device_function", methods=['GET', 'POST'])
+@app.route("/device_function")
 def device_function_route():
-    if request.method == 'GET':
-        query = "SELECT deviceName, functionName FROM device_function \
-                JOIN devices ON device_function.deviceID = devices.deviceID \
-                JOIN functions ON device_function.functionID = functions.functionID;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("device_function.j2", data=results)
+    query = "SELECT deviceName, functionName FROM device_function \
+            JOIN devices ON device_function.deviceID = devices.deviceID \
+            JOIN functions ON device_function.functionID = functions.functionID;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("device_function.j2", data=results)
 
-@app.route("/missions", methods=['GET', 'POST'])
+@app.route("/missions")
 def missions_route():
-    if request.method == 'GET':
-        query = "SELECT missionID, missionName, objective, locationName \
-                FROM missions JOIN locations ON missions.locationID = locations.locationID;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("missions.j2", data=results)
+    query = "SELECT missionID, missionName, objective, locationName \
+            FROM missions JOIN locations ON missions.locationID = locations.locationID;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("missions.j2", data=results)
 
-@app.route("/locations", methods=['GET', 'POST'])
+@app.route("/locations")
 def locations_route():
-    if request.method == 'GET':
-        query = "SELECT locationID, locationName, localsystem, localBody \
-                FROM locations;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("locations.j2", data=results)
+    query = "SELECT locationID, locationName, localsystem, localBody \
+            FROM locations;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("locations.j2", data=results)
+
+@app.route("/operators")
+def operators_route():
+    query = "SELECT operatorID, operatorName, deviceName \
+            FROM operators \
+            JOIN devices ON operators.deviceID = devices.deviceID;"
+    results = db.execute_query(db_connection=db_connection, query=query)
+    return render_template("operators.j2", data=results)
 
 @app.route("/get-dropdown-data")
 def get_dropdown_data():
@@ -81,15 +84,6 @@ def get_dropdown_data():
     print(results)
     return (json.jsonify(results), 200)
 
-@app.route("/operators")
-def operators_route():
-    if request.method == 'GET':
-        query = "SELECT operatorID, operatorName, deviceName \
-                FROM operators \
-                JOIN devices ON operators.deviceID = devices.deviceID;"
-        results = db.execute_query(db_connection=db_connection, query=query)
-        return render_template("operators.j2", data=results)
-
 @app.route("/reset")
 def reset_db():
     """
@@ -104,6 +98,12 @@ def reset_db():
         multi_cursor.close()
 
     return "Reset successful!"
+
+# POST Handlers
+
+@app.route("/add-data", methods=['POST'])
+def add_data():
+    pass
 
 
 # Listener
