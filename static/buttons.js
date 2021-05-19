@@ -313,6 +313,8 @@ function makeEditable(event) {
             child.replaceChild(submitBtn, child.firstElementChild);
 
         } else if (child.firstElementChild.name == 'del') {
+            console.log(originalContent)
+
             let cancelBtn = document.createElement('button');
             cancelBtn.name = 'cancel';
             cancelBtn.textContent = 'Cancel';
@@ -333,8 +335,10 @@ function cancelEdit(event, originalContent) {
 
     // cycle through only ELEMENT nodes (given by .children)
     for (let child of row.children) {
+        
         if (child.firstElementChild.tagName == 'INPUT') {
-            let content = child.firstChild.value;
+            console.log(child.firstElementChild.value);
+            content = child.firstElementChild.value;
             child.removeChild(child.firstElementChild);
 
             if (originalContent) {
@@ -342,7 +346,6 @@ function cancelEdit(event, originalContent) {
             } else {
                 child.textContent = content;
             }
-
 
         } else if (child.firstElementChild.name == 'submit') {
             let editBtn = document.createElement('button');

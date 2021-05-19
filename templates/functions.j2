@@ -44,7 +44,7 @@
                 {% for row in data %}
                 <tr id="{{ loop.index }}">
                     {% for key in row.keys() %}
-                    <td>{{ row[key] }}</td>
+                    <td  name={{ key }}>{{ row[key] }}</td>
                     {% endfor %}
                     <td><button name="edit">Update</button></td>
                     <td><button name="del">Delete</button></td>
