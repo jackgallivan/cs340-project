@@ -313,8 +313,6 @@ function makeEditable(event) {
             child.replaceChild(submitBtn, child.firstElementChild);
 
         } else if (child.firstElementChild.name == 'del') {
-            console.log(originalContent)
-
             let cancelBtn = document.createElement('button');
             cancelBtn.name = 'cancel';
             cancelBtn.textContent = 'Cancel';
@@ -326,8 +324,6 @@ function makeEditable(event) {
 }
 
 function cancelEdit(event, originalContent) {
-    //console.log(originalContent);
-
     // buttons are nested in <td> which is in a <tr>
     let tableRow = event.target.parentElement.parentElement;
     let rowId = tableRow.id;
@@ -337,7 +333,6 @@ function cancelEdit(event, originalContent) {
     for (let child of row.children) {
         
         if (child.firstElementChild.tagName == 'INPUT') {
-            console.log(child.firstElementChild.value);
             content = child.firstElementChild.value;
             child.removeChild(child.firstElementChild);
 
