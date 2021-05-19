@@ -50,11 +50,11 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     '''
     #TODO: Sanitize the query before executing it!!!
     cursor.execute(query, query_params)
-    cursor.fetchall()
+    results = cursor.fetchall()
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit()
-    return cursor
+    return results
 
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")
