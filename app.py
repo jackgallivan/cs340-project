@@ -99,7 +99,8 @@ def get_dropdown_data():
             # print("executing query for " + str(dropdown))
 
             query = valid_dropdowns[dropdown]
-            results[dropdown] = db.execute_query(db_connection=db_connection, query=query)
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            results[dropdown] = cursor.fetchall()
             # print(results[dropdown])
 
     # query = "SELECT locationName FROM locations;"
