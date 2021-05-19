@@ -30,16 +30,14 @@ def devices_route():
              "FROM devices "
              "JOIN locations ON devices.locationID = locations.locationID "
              "JOIN missions ON devices.missionID = missions.missionID;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("devices.j2", data=results)
 
 @app.route("/functions")
 def functions_route():
     query = ("SELECT functionID, functionName, description "
              "FROM functions;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("functions.j2", data=results)
 
 @app.route("/device_function")
@@ -47,24 +45,21 @@ def device_function_route():
     query = ("SELECT deviceName, functionName FROM device_function "
              "JOIN devices ON device_function.deviceID = devices.deviceID "
              "JOIN functions ON device_function.functionID = functions.functionID;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("device_function.j2", data=results)
 
 @app.route("/missions")
 def missions_route():
     query = ("SELECT missionID, missionName, objective, locationName "
              "FROM missions JOIN locations ON missions.locationID = locations.locationID;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("missions.j2", data=results)
 
 @app.route("/locations")
 def locations_route():
     query = ("SELECT locationID, locationName, localsystem, localBody "
              "FROM locations;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("locations.j2", data=results)
 
 @app.route("/operators")
@@ -72,8 +67,7 @@ def operators_route():
     query = ("SELECT operatorID, operatorName, deviceName "
              "FROM operators "
              "JOIN devices ON operators.deviceID = devices.deviceID;")
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = db.execute_query(db_connection=db_connection, query=query)
     return render_template("operators.j2", data=results)
 
 @app.route("/get-dropdown-data")
