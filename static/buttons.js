@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", bindButtons);
+document.addEventListener("DOMContentLoaded", getDropdownData);
 
 // BUTTON BINDINGS (ON PAGE LOAD)
 
@@ -72,6 +73,26 @@ function bindButtons() {
 // TO DO: 
 // - refactor add and delete buttons (UI)
 // - eventually need to integrate with our backend
+
+function getDropdownData() {
+    // incomplete -- not yet working
+    let req = new XMLHttpRequest();
+    url = '/get-dropdown-data'
+    req.open('POST', url, true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.addEventListener('load', () => {
+        if (req.status < 400) {
+            console.log(req.responseText);
+            rowData.id = JSON.parse(req.responseText)['id'];
+            addToTable(rowData);
+        } else {
+            console.log("looks like an error happened");
+        }
+    });
+
+    req.send(JSON.stringify(location.href.split("/").pop()));
+}
+
 
 function addRow() {
 
