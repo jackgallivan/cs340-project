@@ -288,26 +288,68 @@ function makeEditable(event) {
 
     let row = document.getElementById(rowId);
     let exclude = ["deviceID", "locationID", "missionID", "functionID", "operatorID"];
+    let dropdowns = ["deviceName", "locationName", "missionName", "operatorName", "functionName"];
+    let dropdownExclude = {"devices": "deviceName",
+                           "locations": "locationName",
+                           "missions": "missionName",
+                           "operators": "operatorName",
+                           "functions": "functionName"
+                           };
+
     console.log(exclude);
     for (let child of row.children) {
         if (!(exclude.includes(child.getAttribute('name')))) {
+            // no inner element means just raw data in the <td>
             if (!child.firstElementChild) {
                 console.log(child.getAttribute('name'));
-                let field = document.createElement('input');
-                field.name = child.getAttribute('name');
-                if (child.getAttribute('name') == 'date') {
-                    field.type = 'date';
-                    field.value = child.textContent;
+
+                // the field in question requires a dropdown
+                if (dropdowns.includes(child.getAttribute('name'))) {
+                    document.getElementsByClassName('')
+                    let table = document.getElementById('display-data');
+                    
+                    if (child.getAttribute('name') != dropdownExclude[table.getAttribute('name')]) {
+                    
+                        let field = document.createElement('select');
+                        field.name = child.getAttribute('name');
+                        field.value = value;
+                        field.innerText = value;
+
+                        option = document.createElement('option')
+                        option.value = value;
+                        option.innerText = value;
+                        field.appendChild(option)
+                        
+                        originalContent[field.name] = field.value;
+                        child.textContent = '';
+                        child.append(field);
+                        
+                        getDropdownData();
+                    }
+                    
+
                 } else {
-                    field.type = 'text';
-                    field.value = child.textContent;
+
+                    let field = document.createElement('input');
+                    field.name = child.getAttribute('name');
+
+                    if (child.getAttribute('name') == 'date') {
+                        field.type = 'date';
+                        field.value = child.textContent;
+                    }
+
+                    else {
+                        field.type = 'text';
+                        field.value = child.textContent;
+                    }
+
+                    originalContent[field.name] = field.value;
+                    child.textContent = '';
+                    child.append(field);
                 }
+                
 
-                originalContent[field.name] = field.value;
-                child.textContent = '';
-                child.append(field);
-
-
+            // the <td> has the edit button in it
             } else if (child.firstElementChild.name == 'edit') {
                 let submitBtn = document.createElement('button');
                 submitBtn.name = 'submit';
@@ -315,7 +357,8 @@ function makeEditable(event) {
                 bindSubmitEdit(submitBtn);
 
                 child.replaceChild(submitBtn, child.firstElementChild);
-
+            
+            // the <td> has the delete button in it
             } else if (child.firstElementChild.name == 'del') {
                 let cancelBtn = document.createElement('button');
                 cancelBtn.name = 'cancel';
@@ -337,15 +380,17 @@ function cancelEdit(event, originalContent) {
     // cycle through only ELEMENT nodes (given by .children)
     for (let child of row.children) {
         if (child.firstElementChild) {
-            if (child.firstElementChild.tagName == 'INPUT') {
-                content = child.firstElementChild.value;
-                child.removeChild(child.firstElementChild);
+            if (child.firstElementChild.tagName == 'INPUT' || 
+                child.firstElementChild.tagName == 'SELECT') {
+                
+                    content = child.firstElementChild.value;
+                    child.removeChild(child.firstElementChild);
 
-                if (originalContent) {
-                    child.textContent = originalContent[child.getAttribute('name')]
-                } else {
-                    child.textContent = content;
-                }
+                    if (originalContent) {
+                        child.textContent = originalContent[child.getAttribute('name')]
+                    } else {
+                        child.textContent = content;
+                    }
 
             } else if (child.firstElementChild.name == 'submit') {
                 let editBtn = document.createElement('button');
