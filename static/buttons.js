@@ -329,14 +329,11 @@ function makeEditable(event, dropdownData) {
                 console.log(child.getAttribute('name'));
 
                 // the field in question requires a dropdown
-                if (dropdowns.includes(child.getAttribute('name'))) {
-                    document.getElementsByClassName('')
-                    let table = document.getElementById('display-data');
+                let table = document.getElementById('display-data');
+                if (dropdowns.includes(child.getAttribute('name')) &&
+                    child.getAttribute('name') != dropdownExclude[table.getAttribute('name')]) {
 
-                    console.log("dropdown name is " + child.getAttribute('name'));
-                    console.log("table name is " + table.getAttribute('name'));
-                    console.log("dropdown exclude is " + dropdownExclude[table.getAttribute('name')])
-                    if (child.getAttribute('name') != dropdownExclude[table.getAttribute('name')]) {
+                        document.getElementsByClassName('')
 
                         let field = document.createElement('select');
                         field.name = child.getAttribute('name');
@@ -353,15 +350,14 @@ function makeEditable(event, dropdownData) {
                         child.append(field);
 
                         getDropdownData(dropdownData);
-                    }
-
 
                 } else {
 
                     let field = document.createElement('input');
                     field.name = child.getAttribute('name');
 
-                    if (child.getAttribute('name') == 'date') {
+
+                    if (child.getAttribute('name') == 'dateLaunched') {
                         field.type = 'date';
                         field.value = child.textContent;
                     }
