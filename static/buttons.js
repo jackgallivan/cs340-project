@@ -361,7 +361,8 @@ function makeEditable(event, dropdownData) {
                     let field = document.createElement('input');
                     field.name = child.getAttribute('name');
 
-                    if (child.getAttribute('name') == 'date') {
+
+                    if (child.getAttribute('name') == 'dateLaunched') {
                         field.type = 'date';
                         field.value = child.textContent;
                     }
