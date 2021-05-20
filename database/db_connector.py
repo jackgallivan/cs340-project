@@ -6,16 +6,20 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 # Set the variables in our application with those environment variables
-host = os.environ.get("340DBHOST")
-user = os.environ.get("340DBUSER")
-passwd = os.environ.get("340DBPW")
-db = os.environ.get("340DB")
+dbconfig = {
+    'pool_name': 'mypool',
+    'pool_size': 10,
+    'host': os.environ.get("340DBHOST"),
+    'user': os.environ.get("340DBUSER"),
+    'passwd': os.environ.get("340DBPW"),
+    'db': os.environ.get("340DB")
+}
 
-def connect_to_database(host = host, user = user, passwd = passwd, db = db):
+def connect_to_database(dbconfig = dbconfig):
     '''
     connects to a database and returns a database objects
     '''
-    db_connection = mysql.connector.connect(host=host,user=user,password=passwd,db=db)
+    db_connection = mysql.connector.connect(**dbconfig)
     return db_connection
 
 def execute_query(db_connection = None, query = None, query_params = ()):
@@ -38,9 +42,12 @@ def execute_query(db_connection = None, query = None, query_params = ()):
         print("query is empty! Please pass a SQL query in query")
         return None
 
+    if not db_connection.is_connected():
+        db_connection.reconnect()
+
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor(dictionary=True)
+    cursor = db_connection.cursor(dictionary=True, buffered=True)
 
     '''
     params = tuple()
@@ -50,11 +57,10 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     '''
     #TODO: Sanitize the query before executing it!!!
     cursor.execute(query, query_params)
-    results = cursor.fetchall()
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit()
-    return results
+    return cursor
 
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")
