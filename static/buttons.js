@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', bindButtons);
 function bindAdd(btn) {
 
     btn.addEventListener('click', function(event) {
+        event.preventDefault();
         console.log(event);
         addRow(btn)
-        event.preventDefault;
         }
     );
 }
@@ -16,9 +16,9 @@ function bindAdd(btn) {
 function bindDelete(btn) {
 
     btn.addEventListener('click', function(event) {
+        event.preventDefault();
         console.log(event);
         deleteRow(event);
-        event.preventDefault;
         }
     );
 }
@@ -26,27 +26,27 @@ function bindDelete(btn) {
 function bindEdit(btn, dropdownData) {
 
     btn.addEventListener('click', function(event) {
+        event.preventDefault();
         console.log(event);
         makeEditable(event, dropdownData);
-        event.preventDefault;
         }
     );
 }
 
 function bindSubmitEdit(btn) {
     btn.addEventListener('click', function(event) {
+        event.preventDefault();
         console.log(event);
         submitEdit(event);
-        event.preventDefault;
         }
     );
 }
 
 function bindCancelEdit(btn, originalContent) {
     btn.addEventListener('click', function(event) {
+        event.preventDefault();
         console.log(event);
         cancelEdit(event, originalContent);
-        event.preventDefault;
         }
     );
 }
@@ -54,15 +54,15 @@ function bindCancelEdit(btn, originalContent) {
 function bindButtons() {
     dropdownData = getDropdownData();
 
-    let add = document.getElementById('add');
+    const add = document.getElementById('add');
     bindAdd(add);
 
-    let del = document.getElementsByName('del');
+    const del = document.getElementsByName('del');
     for (let d of del) {
         bindDelete(d);
     }
 
-    let edit = document.getElementsByName('edit');
+    const edit = document.getElementsByName('edit');
     for (let e of edit) {
         bindEdit(e, dropdownData);
     }
@@ -87,7 +87,7 @@ function getDropdownData(data) {
             if (req.status < 400) {
                 console.log('request successful')
                 response = JSON.parse(req.responseText);
-                
+
                 console.log(response);
                 dropdowns = document.getElementsByTagName('select');
                 for (dropdown in dropdowns) {
@@ -126,7 +126,7 @@ function getDropdownData(data) {
                 console.log('looks like an error happened');
             }
         });
-        
+
 
         dropdowns = document.getElementsByTagName('select');
         data = [];
@@ -332,12 +332,12 @@ function makeEditable(event, dropdownData) {
                 if (dropdowns.includes(child.getAttribute('name'))) {
                     document.getElementsByClassName('')
                     let table = document.getElementById('display-data');
-                    
+
                     console.log("dropdown name is " + child.getAttribute('name'));
                     console.log("table name is " + table.getAttribute('name'));
                     console.log("dropdown exclude is " + dropdownExclude[table.getAttribute('name')])
                     if (child.getAttribute('name') != dropdownExclude[table.getAttribute('name')]) {
-                    
+
                         let field = document.createElement('select');
                         field.name = child.getAttribute('name');
                         field.value = child.textContent;
@@ -347,14 +347,14 @@ function makeEditable(event, dropdownData) {
                         option.value = child.textContent;
                         option.innerText = child.textContent;
                         field.appendChild(option)
-                        
+
                         originalContent[field.name] = field.value;
                         child.textContent = '';
                         child.append(field);
-                        
+
                         getDropdownData(dropdownData);
                     }
-                    
+
 
                 } else {
 
@@ -375,7 +375,7 @@ function makeEditable(event, dropdownData) {
                     child.textContent = '';
                     child.append(field);
                 }
-                
+
 
             // the <td> has the edit button in it
             } else if (child.firstElementChild.name == 'edit') {
@@ -385,7 +385,7 @@ function makeEditable(event, dropdownData) {
                 bindSubmitEdit(submitBtn);
 
                 child.replaceChild(submitBtn, child.firstElementChild);
-            
+
             // the <td> has the delete button in it
             } else if (child.firstElementChild.name == 'del') {
                 let cancelBtn = document.createElement('button');
@@ -408,9 +408,9 @@ function cancelEdit(event, originalContent) {
     // cycle through only ELEMENT nodes (given by .children)
     for (let child of row.children) {
         if (child.firstElementChild) {
-            if (child.firstElementChild.tagName == 'INPUT' || 
+            if (child.firstElementChild.tagName == 'INPUT' ||
                 child.firstElementChild.tagName == 'SELECT') {
-                
+
                     content = child.firstElementChild.value;
                     child.removeChild(child.firstElementChild);
 
