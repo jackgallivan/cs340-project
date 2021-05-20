@@ -7,17 +7,19 @@ load_dotenv(find_dotenv())
 
 # Set the variables in our application with those environment variables
 dbconfig = {
+    'pool_name': 'mypool',
+    'pool_size': 10,
     'host': os.environ.get("340DBHOST"),
     'user': os.environ.get("340DBUSER"),
     'passwd': os.environ.get("340DBPW"),
     'db': os.environ.get("340DB")
 }
 
-def connect_to_database(pool_name = 'mypool', pool_size = 10, dbconfig = dbconfig):
+def connect_to_database(dbconfig = dbconfig):
     '''
     connects to a database and returns a database objects
     '''
-    db_connection = mysql.connector.connect(pool_name = 'mypool', pool_size = 10, **dbconfig)
+    db_connection = mysql.connector.connect(**dbconfig)
     return db_connection
 
 def execute_query(db_connection = None, query = None, query_params = ()):
@@ -39,6 +41,9 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     if query is None or len(query.strip()) == 0:
         print("query is empty! Please pass a SQL query in query")
         return None
+
+    if not db_connection.is_connected():
+        db_connection.reconnect()
 
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
