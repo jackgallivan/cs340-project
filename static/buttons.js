@@ -337,12 +337,12 @@ function makeEditable(event, dropdownData) {
                     
                         let field = document.createElement('select');
                         field.name = child.getAttribute('name');
-                        field.value = value;
-                        field.innerText = value;
+                        field.value = child.textContent;
+                        field.innerText = child.textContent;
 
                         option = document.createElement('option')
-                        option.value = value;
-                        option.innerText = value;
+                        option.value = child.textContent;
+                        option.innerText = child.textContent;
                         field.appendChild(option)
                         
                         originalContent[field.name] = field.value;
