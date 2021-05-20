@@ -43,7 +43,7 @@ def execute_query(db_connection = None, query = None, query_params = ()):
         return None
 
     if not db_connection.is_connected():
-        db_connection.reconnect()
+        db_connection.reconnect(attempts=2, delay=0.5)
 
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249

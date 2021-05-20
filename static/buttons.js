@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', bindButtons);
-document.addEventListener('DOMContentLoaded', getDropdownData);
+// document.addEventListener('DOMContentLoaded', getDropdownData);
 
 // BUTTON BINDINGS (ON PAGE LOAD)
 
@@ -23,11 +23,11 @@ function bindDelete(btn) {
     );
 }
 
-function bindEdit(btn) {
+function bindEdit(btn, dropdownData) {
 
     btn.addEventListener('click', function(event) {
         console.log(event);
-        makeEditable(event);
+        makeEditable(event, dropdownData);
         event.preventDefault;
         }
     );
@@ -52,6 +52,8 @@ function bindCancelEdit(btn, originalContent) {
 }
 
 function bindButtons() {
+    dropdownData = getDropdownData();
+
     let add = document.getElementById('add');
     bindAdd(add);
 
@@ -62,7 +64,7 @@ function bindButtons() {
 
     let edit = document.getElementsByName('edit');
     for (let e of edit) {
-        bindEdit(e);
+        bindEdit(e, dropdownData);
     }
 
 }
@@ -74,66 +76,89 @@ function bindButtons() {
 // - refactor add and delete buttons (UI)
 // - eventually need to integrate with our backend
 
-function getDropdownData() {
-    // incomplete -- not yet working
-    let req = new XMLHttpRequest();
-    url = '/get-dropdown-data'
-    req.open('POST', url, true);
-    req.setRequestHeader('Content-Type', 'application/json');
-    req.addEventListener('load', () => {
-        if (req.status < 400) {
-            console.log('request successful')
-            response = JSON.parse(req.responseText);
-            
-            console.log(response);
-            dropdowns = document.getElementsByTagName('select');
-            for (dropdown in dropdowns) {
-                dropdownName = dropdowns[dropdown].name;
-                console.log(dropdownName);
-                if (dropdownName in response) {
-                    data = response[dropdownName]
-                    console.log(response[dropdownName]);
-                    for (option in data) {
-                        value = data[option][dropdownName];
-                        console.log(data[option][dropdownName]);
-                        el = document.createElement('option');
-                        el.value = value;
-                        el.innerText = value;
-                        dropdowns[dropdown].appendChild(el);
+function getDropdownData(data) {
+
+    if (!data) {
+        let req = new XMLHttpRequest();
+        url = '/get-dropdown-data'
+        req.open('POST', url, true);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.addEventListener('load', () => {
+            if (req.status < 400) {
+                console.log('request successful')
+                response = JSON.parse(req.responseText);
+                
+                console.log(response);
+                dropdowns = document.getElementsByTagName('select');
+                for (dropdown in dropdowns) {
+                    dropdownName = dropdowns[dropdown].name;
+                    console.log(dropdownName);
+                    if (dropdownName in response) {
+                        data = response[dropdownName]
+                        console.log(response[dropdownName]);
+                        for (option in data) {
+                            value = data[option][dropdownName];
+                            console.log(data[option][dropdownName]);
+                            el = document.createElement('option');
+                            el.value = value;
+                            el.innerText = value;
+                            dropdowns[dropdown].appendChild(el);
+                        }
+                        // for (option in response[dropdown.name]) {
+                        //     console.log(option);
+                        // }
                     }
-                    // for (option in response[dropdown.name]) {
-                    //     console.log(option);
-                    // }
                 }
+
+                // for (data in response) {
+                //     console.log(data, response[data]);
+                // }
+                // () => {
+                //     dropdowns = document.getElementsByTagName('select');
+                //     for (el in dropdowns) {
+                //         for (option in JSON.parse(req.responseText)[dropdowns[el]]) {
+                //             new_option = document.createElement('option');
+                //             console.log(option)
+                //         }
+                //     }
+                // }
+            } else {
+                console.log('looks like an error happened');
             }
+        });
+        
 
-            // for (data in response) {
-            //     console.log(data, response[data]);
-            // }
-            // () => {
-            //     dropdowns = document.getElementsByTagName('select');
-            //     for (el in dropdowns) {
-            //         for (option in JSON.parse(req.responseText)[dropdowns[el]]) {
-            //             new_option = document.createElement('option');
-            //             console.log(option)
-            //         }
-            //     }
-            // }
-        } else {
-            console.log('looks like an error happened');
+        dropdowns = document.getElementsByTagName('select');
+        data = [];
+        for (el in dropdowns) {
+            data.push(dropdowns[el]["name"]);
         }
-    });
-
-    dropdowns = document.getElementsByTagName('select');
-    data = [];
-    for (el in dropdowns) {
-        data.push(dropdowns[el]["name"]);
+        // console.log(data)
+        // console.log(dropdowns);
+        req.send(JSON.stringify(data));
+        return data
     }
-    // console.log(data)
-    // console.log(dropdowns);
-    req.send(JSON.stringify(data));
 
+    else {
+        dropdowns = document.getElementsByTagName('select');
+        for (dropdown in dropdowns) {
+            dropdownName = dropdowns[dropdown].name;
+            console.log(dropdownName);
+            if (dropdownName in response) {
+                data = response[dropdownName]
+                console.log(response[dropdownName]);
+                for (option in data) {
+                    value = data[option][dropdownName];
+                    console.log(data[option][dropdownName]);
+                    el = document.createElement('option');
+                    el.value = value;
+                    el.innerText = value;
+                    dropdowns[dropdown].appendChild(el);
+                }
+    }
     // req.send(JSON.stringify(location.href.split("/").pop()));
+    }
+}
 }
 
 
@@ -279,7 +304,7 @@ function removeFromTable(rowId) {
     tbody.removeChild(row);
 }
 
-function makeEditable(event) {
+function makeEditable(event, dropdownData) {
     // buttons are nested in <td> which is in a <tr>
     let tableRow = event.target.parentElement.parentElement;
     let rowId = tableRow.id;
@@ -324,7 +349,7 @@ function makeEditable(event) {
                         child.textContent = '';
                         child.append(field);
                         
-                        getDropdownData();
+                        getDropdownData(dropdownData);
                     }
                     
 
