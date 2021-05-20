@@ -24,7 +24,7 @@
         <!-- Allow user to view all data for the missions in the database.
                 Also allow delete and update of rows. -->
         <h2>View all missions</h2>
-        <table id="missions">
+        <table id="display-data" name="missions">
             <thead>
                 <tr>
                     <th>Mission ID</th>
@@ -35,7 +35,7 @@
                     <th>Delete</th>
                 </tr>
             </thead>
-            <tbody id="display-data" name="data-table">
+            <tbody name="data-table">
                 <!-- format for a table row:
                     <tr id='1'> <- ID should be set by retrieving PK from database
                         <td>test</td> <-- Column data

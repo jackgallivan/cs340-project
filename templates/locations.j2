@@ -22,7 +22,7 @@
         <!-- Allow user to view all data for the locations in the database.
                 Also allow delete and update of rows. -->
         <h2>View all locations</h2>
-        <table id="locations">
+        <table id="display-data" name="locations">
             <thead>
                 <tr>
                     <th>Location ID</th>
@@ -33,7 +33,7 @@
                     <th>Delete</th>
                 </tr>
             </thead>
-            <tbody id="display-data" name="data-table">
+            <tbody name="data-table">
                 <!-- format for a table row:
                     <tr id='1'> <- ID should be set by retrieving PK from database
                         <td>test</td> <-- Column data

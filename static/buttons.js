@@ -333,6 +333,9 @@ function makeEditable(event, dropdownData) {
                     document.getElementsByClassName('')
                     let table = document.getElementById('display-data');
                     
+                    console.log("dropdown name is " + child.getAttribute('name'));
+                    console.log("table name is " + table.getAttribute('name'));
+                    console.log("dropdown exclude is " + dropdownExclude[table.getAttribute('name')])
                     if (child.getAttribute('name') != dropdownExclude[table.getAttribute('name')]) {
                     
                         let field = document.createElement('select');
