@@ -200,18 +200,22 @@ function submitEdit(event) {
     let row = document.getElementById(rowId);
 
     let body = {};
+    console.log(row)
     body['id'] = rowId;
     for (let element of row.children) {
-        if (element.firstElementChild.tagName == 'INPUT') {
-            let name = element.firstElementChild.getAttribute('name');
-            let value = element.firstElementChild.value;
-            body[name] = value;
+        if (element.firstElementChild) {
+            if ((element.firstElementChild.tagName == 'INPUT') || 
+                (element.firstElementChild.tagName == 'SELECT')) {
+                    let name = element.firstElementChild.getAttribute('name');
+                    let value = element.firstElementChild.value;
+                    body[name] = value;
+            }
         }
     }
 
     // Open up a request and send to the app
     let req = new XMLHttpRequest();
-    url = ''
+    url = '/update-data'
     req.open('PUT', url, true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
