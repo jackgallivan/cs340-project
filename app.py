@@ -131,16 +131,15 @@ def add_data():
     """
     Accessed for INSERT DB operations.
     """
-    print("Accessing /add-data routes")
+    print("Accessing /add-data route")
     # Get the data in the request object (to be added to a table)
-    # and the root_path, which is the page we are requesting from.
+    # and the referrer_path, which is the page we are requesting from.
     data = request.get_json()
     print("data: ")
     print(data)
-    # root_path = request.script_root
     referrer_path = urlparse(request.referrer).path
     print("referer_path: " + referrer_path)
-    # Create the INSERT query, dependent on the root_path
+    # Create the INSERT query, dependent on the referrer_path
     if referrer_path == '/devices':
         query = (f"INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
                  f"VALUES ('{data['deviceName']}', "
@@ -188,6 +187,52 @@ def add_data():
         abort(500)
     return (json.jsonify(results), 200)
 
+@app.route("/delete-data", methods=['POST'])
+def delete_data():
+    print("Accessing /delete-data route")
+    # Get the data from the request object (to be removed from the table)
+    # and the referrer_path, which is the page we are requesting from.
+    data = request.get_json()
+    print("data: ")
+    print(data)
+    referrer_path = urlparse(request.referrer).path
+    print("referer_path: " + referrer_path)
+    # Create the DELETE query, dependent on the referrer_path
+    if referrer_path == '/devices':
+        query = (f"DELETE FROM devices "
+                 f"WHERE deviceID = '{data['deviceID']}';")
+
+    elif referrer_path == '/functions':
+        query = (f"DELETE FROM functions "
+                 f"WHERE functionID = '{data['functionID']}';")
+
+    elif referrer_path == '/device_function':
+        query = (f"DELETE FROM device_function "
+                 f"WHERE deviceID = (SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
+                 f"AND functionID = (SELECT functionID FROM functions WHERE functionName = '{data['functionName']}');")
+
+    elif referrer_path == '/missions':
+        query = (f"DELETE FROM missions "
+                 f"WHERE missionID = '{data['missionID']}';")
+
+    elif referrer_path == '/locations':
+        query = (f"DELETE FROM locations "
+                 f"WHERE locationID = '{data['locationID']}';")
+
+    elif referrer_path == '/operators':
+        query = (f"DELETE FROM operators "
+                 f"WHERE operatorID = '{data['operatorID']}';")
+
+    else:
+        abort(500)
+    # Execute the query, then check that a row was deleted.
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = {}
+    results['id'] = cursor.lastrowid
+    if cursor.rowcount == 0:
+        # ERROR: no row deleted
+        abort(500)
+    return (json.jsonify(results), 200)
 
 # Error Handlers
 

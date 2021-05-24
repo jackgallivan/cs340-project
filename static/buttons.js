@@ -18,7 +18,7 @@ function bindDelete(btn) {
     btn.addEventListener('click', function(event) {
         event.preventDefault();
         console.log(event);
-        deleteRow(event);
+        deleteRow(btn);
         }
     );
 }
@@ -163,7 +163,7 @@ function getDropdownData(data) {
 
 
 function addRow(btn) {
-
+    // Request body
     const rowData = {}
 
     // Get data elements in the form.
@@ -174,8 +174,9 @@ function addRow(btn) {
         rowData[element.name] = element.value
     })
 
+    // ** MAKE DB REQUEST ** //
     // Open up a request and send to the app
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     url = '/add-data'
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'application/json');
@@ -225,34 +226,38 @@ function submitEdit(event) {
     req.send(JSON.stringify(body));
 }
 
-function deleteRow(event) {
+function deleteRow(btn) {
+    // Request body
+    const rowData = {}
+
     // buttons are nested in <td> which is in a <tr>
-    let tableRow = event.target.parentElement.parentElement;
-    let rowId = tableRow.id;
+    const tableRow = btn.parentElement.parentElement;
+    const rowId = tableRow.id;
 
-    // NOTE: No database backend currently set up.
-    // Use the below code INSTEAD of directly calling
-    // the removeFromTable(rowId) function once
-    // backend is live
-
-    removeFromTable(rowId); // Comment me out once backend is live!
+    // Get table cell elements
+    // (exclude non-data containing cells like "update" or "delete")
+    const tableCells = tableRow.querySelectorAll('td[name]:not([name=""])')
+    // Add the cell elements' inner text to the request body.
+    tableCells.forEach(element => {
+        rowData[element.attributes['name'].value] = element.innerText
+    })
 
     // ** MAKE DB REQUEST ** //
     // // Open up a request and send to the app
-    // let req = new XMLHttpRequest();
-    // url = ''
-    // req.open('DELETE', url, true);
-    // req.setRequestHeader('Content-Type', 'application/json');
-    // req.addEventListener('load', () => {
-    //     if (req.status < 400) {
-    //         console.log(req.responseText);
-    //         removeFromTable(rowId);
-    //     } else {
-    //         console.log("looks like an error happened");
-    //     }
-    // });
+    const req = new XMLHttpRequest();
+    url = '/delete-data'
+    req.open('POST', url, true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.addEventListener('load', () => {
+        if (req.status < 400) {
+            console.log(req.responseText);
+            removeFromTable(rowId);
+        } else {
+            console.log('looks like an error happened');
+        }
+    });
 
-    // req.send(JSON.stringify({'id': rowId}));
+    req.send(JSON.stringify(rowData));
 
 }
 
