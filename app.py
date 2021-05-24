@@ -197,11 +197,28 @@ def update_data():
     referrer_path = urlparse(request.referrer).path
 
     if data:
-        return (str(referrer_path) + " requested to update row: " + json.dumps(data), 200)
-    
+        query = (f"UPDATE devices "
+                 f"SET deviceName = '{data['deviceName']}', "
+                 f"dateLaunched = '{data['dateLaunched']}', "
+                 f"manufacturer = '{data['manufacturer']}', "
+                 f"locationID = (SELECT locationID FROM locations WHERE locationName = '{data['locationName']}'), "
+                 f"missionID = (SELECT missionID FROM missions WHERE missionName = '{data['missionName']}') "
+                 f"WHERE deviceID = '{data['id']}';")
+
     else:
         abort(500)
 
+    
+    # Execute the query, then check that a row was added.
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = {}
+    results['id'] = cursor.lastrowid
+    if cursor.rowcount == 0:
+        # ERROR: no row inserted
+        abort(500)
+
+    return (str(referrer_path) + ": updated id " + json.dumps(data['id']), 200)
+    
 # Error Handlers
 
 @app.errorhandler(404)
