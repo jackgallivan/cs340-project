@@ -232,7 +232,6 @@ function deleteRow(btn) {
 
     // buttons are nested in <td> which is in a <tr>
     const tableRow = btn.parentElement.parentElement;
-    const rowId = tableRow.id;
 
     // Get table cell elements
     // (exclude non-data containing cells like "update" or "delete")
@@ -251,7 +250,7 @@ function deleteRow(btn) {
     req.addEventListener('load', () => {
         if (req.status < 400) {
             console.log(req.responseText);
-            removeFromTable(rowId);
+            tableRow.remove();
         } else {
             console.log('looks like an error happened');
         }
@@ -300,13 +299,6 @@ function addToTable(rowData) {
     newrow.append(del);
 
     tbody.append(newrow);
-}
-
-function removeFromTable(rowId) {
-    // pass in the id of the table tableRow to be removed.
-    let tbody = document.getElementById('data-table');
-    let row = document.getElementById(rowId);
-    tbody.removeChild(row);
 }
 
 function makeEditable(event, dropdownData) {
