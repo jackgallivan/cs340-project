@@ -189,6 +189,19 @@ def add_data():
     return (json.jsonify(results), 200)
 
 
+@app.route('/update-data', methods=['PUT'])
+def update_data():
+    """edit a single row from a given table."""
+
+    data = request.get_json()
+    referrer_path = urlparse(request.referrer).path
+
+    if data:
+        return (str(referrer_path) + " requested to update row: " + json.dumps(data), 200)
+    
+    else:
+        abort(500)
+
 # Error Handlers
 
 @app.errorhandler(404)
