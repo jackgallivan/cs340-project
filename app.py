@@ -30,7 +30,7 @@ def devices_route():
     query = ("SELECT deviceID, deviceName, dateLaunched, manufacturer, locationName, missionName "
              "FROM devices "
              "JOIN locations ON devices.locationID = locations.locationID "
-             "JOIN missions ON devices.missionID = missions.missionID;")
+             "LEFT JOIN missions ON devices.missionID = missions.missionID;")
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
     return render_template("devices.j2", data=results)
@@ -72,7 +72,7 @@ def locations_route():
 def operators_route():
     query = ("SELECT operatorID, operatorName, deviceName "
              "FROM operators "
-             "JOIN devices ON operators.deviceID = devices.deviceID;")
+             "LEFT JOIN devices ON operators.deviceID = devices.deviceID;")
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
     return render_template("operators.j2", data=results)
