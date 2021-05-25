@@ -33,11 +33,11 @@ function bindEdit(btn, dropdownData) {
     );
 }
 
-function bindSubmitEdit(btn) {
+function bindSubmitEdit(btn, originalContent) {
     btn.addEventListener('click', function(event) {
         event.preventDefault();
         console.log(event);
-        submitEdit(event);
+        submitEdit(event, originalContent);
         }
     );
 }
@@ -193,7 +193,7 @@ function addRow(btn) {
     req.send(JSON.stringify(rowData));
 }
 
-function submitEdit(event) {
+function submitEdit(event, originalContent) {
     // buttons are nested in <td> which is in a <tr>
     let tableRow = event.target.parentElement.parentElement;
     let rowId = tableRow.id;
@@ -224,7 +224,8 @@ function submitEdit(event) {
             cancelEdit(event);
         } else {
             console.log('looks like an error happened');
-            cancelEdit(event, body);
+            //cancelEdit(event, body);
+            cancelEdit(event, originalContent);
         }
     });
     req.send(JSON.stringify(body));
@@ -379,7 +380,7 @@ function makeEditable(event, dropdownData) {
                 let submitBtn = document.createElement('button');
                 submitBtn.name = 'submit';
                 submitBtn.textContent = 'Submit';
-                bindSubmitEdit(submitBtn);
+                bindSubmitEdit(submitBtn, originalContent);
 
                 child.replaceChild(submitBtn, child.firstElementChild);
 

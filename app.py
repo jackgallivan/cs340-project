@@ -244,29 +244,28 @@ def update_data():
     if data:
         if referrer_path == '/devices':
             query = (f"UPDATE devices "
-                     f"SET deviceName = '{data['deviceName']}', "
-                     f"dateLaunched = '{data['dateLaunched']}', "
-                     f"manufacturer = '{data['manufacturer']}', "
-                     f"locationID = (SELECT locationID FROM locations WHERE locationName = '{data['locationName']}'), "
-                     f"missionID = (SELECT missionID FROM missions WHERE missionName = '{data['missionName']}') "
-                     f"WHERE deviceID = '{data['id']}';")
+                     f"SET deviceName = %(deviceName)s, "
+                     f"dateLaunched = %(dateLaunched)s, "
+                     f"manufacturer = %(manufacturer)s, "
+                     f"locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
+                     f"missionID = (SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
+                     f"WHERE deviceID = %(id)s;")
         
         elif referrer_path == '/functions':
             query = (f"UPDATE functions "
-                     f"SET functionName = '{data['functionName']}', description = '{data['description']}' "
-                     f"WHERE functionID = '{data['id']}';")
+                     f"SET functionName = %(functionName)s, description = %(description)s "
+                     f"WHERE functionID = %(id)s;")
 
         elif referrer_path == '/operators':
             query = (f"UPDATE operators "
-                     f"SET operatorName = '{data['operatorName']}', "
-                     f"deviceID = (SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
-                     f"WHERE operatorID = '{data['id']}';") 
-
+                     f"SET operatorName = %(operatorName)s, "
+                     f"deviceID = (SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
+                     f"WHERE operatorID = %(id)s;") 
 
         elif referrer_path == '/locations':
             query = (f"UPDATE locations "
-                    f"SET locationName = '{data['locationName']}', localSystem = '{data['localsystem']}', localBody = '{data['localBody']}' "
-                    f"WHERE locationID = '{data['id']}';")
+                    f"SET locationName = %(locationName)s, localSystem = %(localsystem)s, localBody = %(localBody)s "
+                    f"WHERE locationID = %(id)s;")
 
         elif referrer_path == '/missions':
             query = (f"UPDATE missions "
@@ -279,7 +278,7 @@ def update_data():
         abort(500)
     
     # Execute the query, then check that a row was added.
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=db_connection, query=query, query_params=data)
     results = {}
     results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
