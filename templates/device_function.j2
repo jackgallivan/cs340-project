@@ -12,11 +12,11 @@
         <form>
             <!-- NOTE no IDs or anything added for now. should sketch out our JS interactions
                     and decide what we need for that. -->
-            <select class="add-input" name="functionName" id="addFunction">
-                <option value="">--Function Name--</option>
-            </select>
             <select class="add-input" name="deviceName" id="addDevice">
                 <option value="">--Device Name--</option>
+            </select>
+            <select class="add-input" name="functionName" id="addFunction">
+                <option value="">--Function Name--</option>
             </select>
             <input id="add" type="submit" value="Add">
         </form>
@@ -28,8 +28,8 @@
         <table id="display-data" name="function-device">
             <thead>
                 <tr>
-                    <th>Function Name</th>
                     <th>Device Name</th>
+                    <th>Function Name</th>
                     <th>Delete</th>
                 </tr>
             </thead>
