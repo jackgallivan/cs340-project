@@ -131,7 +131,7 @@ function getDropdownData(data) {
         dropdowns = document.getElementsByTagName('select');
         data = [];
         for (el in dropdowns) {
-            data.push(dropdowns[el]["name"]);
+            data.push(dropdowns[el]['name']);
         }
         // console.log(data)
         // console.log(dropdowns);
@@ -332,13 +332,13 @@ function makeEditable(event, dropdownData) {
     let originalContent = {};
 
     let row = document.getElementById(rowId);
-    let exclude = ["deviceID", "locationID", "missionID", "functionID", "operatorID"];
-    let dropdowns = ["deviceName", "locationName", "missionName", "operatorName", "functionName"];
-    let dropdownExclude = {"devices": "deviceName",
-                           "locations": "locationName",
-                           "missions": "missionName",
-                           "operators": "operatorName",
-                           "functions": "functionName"
+    let exclude = ['deviceID', 'locationID', 'missionID', 'functionID', 'operatorID'];
+    let dropdowns = ['deviceName', 'locationName', 'missionName', 'operatorName', 'functionName'];
+    let dropdownExclude = {'devices': 'deviceName',
+                           'locations': 'locationName',
+                           'missions': 'missionName',
+                           'operators': 'operatorName',
+                           'functions': 'functionName'
                            };
 
     console.log(exclude);
