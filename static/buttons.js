@@ -302,23 +302,24 @@ function addToTable(rowData) {
         }
     }
 
-    const edit = document.createElement('td');
-    const editBtn = document.createElement('button');
-    editBtn.name = 'edit';
-    editBtn.textContent = 'Update';
-    bindEdit(editBtn);
-    edit.append(editBtn);
-    newrow.append(edit);
-
     if (window.location.pathname != '/device_function') {
-        const del = document.createElement('td');
-        const delBtn = document.createElement('button');
-        delBtn.name = 'del';
-        delBtn.textContent = 'Delete';
-        bindDelete(delBtn);
-        del.append(delBtn);
-        newrow.append(del);
+        const edit = document.createElement('td')
+        const editBtn = document.createElement('button')
+        editBtn.name = 'edit'
+        editBtn.textContent = 'Update'
+        bindEdit(editBtn)
+        edit.append(editBtn)
+        newrow.append(edit)
     }
+
+
+    const del = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.name = 'del';
+    delBtn.textContent = 'Delete';
+    bindDelete(delBtn);
+    del.append(delBtn);
+    newrow.append(del);
 
     tbody.append(newrow);
 }
