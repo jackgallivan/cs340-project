@@ -141,45 +141,45 @@ def add_data():
     print("referer_path: " + referrer_path)
     # Create the INSERT query, dependent on the referrer_path
     if referrer_path == '/devices':
-        query = (f"INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
-                 f"VALUES ('{data['deviceName']}', "
-                 f"'{data['dateLaunched']}', "
-                 f"'{data['manufacturer']}', "
-                 f"(SELECT locationID FROM locations WHERE locationName = '{data['locationName']}'), "
-                 f"(SELECT missionID FROM missions WHERE missionName = '{data['missionName']}') "
-                 f");")
+        query = ("INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
+                 "VALUES (%(deviceName)s, "
+                 "%(dateLaunched)s, "
+                 "%(manufacturer)s, "
+                 "(SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
+                 "(SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
+                 ");")
 
     elif referrer_path == '/functions':
-        query = (f"INSERT INTO functions (functionName, description) "
-                 f"VALUES ('{data['functionName']}', '{data['description']}');")
+        query = ("INSERT INTO functions (functionName, description) "
+                 "VALUES (%(functionName)s, %(description)s);")
 
     elif referrer_path == '/device_function':
-        query = (f"INSERT INTO device_function (deviceID, functionID) "
-                 f"VALUES ((SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}'), "
-                 f"(SELECT functionID FROM functions WHERE functionName = '{data['functionName']}') "
-                 f");")
+        query = ("INSERT INTO device_function (deviceID, functionID) "
+                 "VALUES ((SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s), "
+                 "(SELECT functionID FROM functions WHERE functionName = %(functionName)s) "
+                 ");")
 
     elif referrer_path == '/missions':
-        query = (f"INSERT INTO missions (missionName, objective, locationID) "
-                 f"VALUES ('{data['missionName']}', "
-                 f"'{data['objective']}', "
-                 f"(SELECT locationID FROM locations WHERE locationName = '{data['locationName']}') "
-                 f");")
+        query = ("INSERT INTO missions (missionName, objective, locationID) "
+                 "VALUES (%(missionName)s, "
+                 "%(objective)s, "
+                 "(SELECT locationID FROM locations WHERE locationName = %(locationName)s) "
+                 ");")
 
     elif referrer_path == '/locations':
-        query = (f"INSERT INTO locations (locationName, localSystem, localBody) "
-                 f"VALUES ('{data['locationName']}', '{data['localSystem']}', '{data['localBody']}');")
+        query = ("INSERT INTO locations (locationName, localSystem, localBody) "
+                 "VALUES (%(locationName)s, %(localSystem)s, %(localBody)s);")
 
     elif referrer_path == '/operators':
-        query = (f"INSERT INTO operators (operatorName, deviceID) "
-                 f"VALUES ('{data['operatorName']}', "
-                 f"(SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
-                 f");")
+        query = ("INSERT INTO operators (operatorName, deviceID) "
+                 "VALUES (%(operatorName)s, "
+                 "(SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
+                 ");")
 
     else:
         abort(500)
     # Execute the query, then check that a row was added.
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=db_connection, query=query, query_params=data)
     results = {}
     results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
@@ -199,34 +199,34 @@ def delete_data():
     print("referer_path: " + referrer_path)
     # Create the DELETE query, dependent on the referrer_path
     if referrer_path == '/devices':
-        query = (f"DELETE FROM devices "
-                 f"WHERE deviceID = '{data['deviceID']}';")
+        query = ("DELETE FROM devices "
+                 "WHERE deviceID = %(deviceID)s;")
 
     elif referrer_path == '/functions':
-        query = (f"DELETE FROM functions "
-                 f"WHERE functionID = '{data['functionID']}';")
+        query = ("DELETE FROM functions "
+                 "WHERE functionID = %(functionID)s;")
 
     elif referrer_path == '/device_function':
-        query = (f"DELETE FROM device_function "
-                 f"WHERE deviceID = (SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
-                 f"AND functionID = (SELECT functionID FROM functions WHERE functionName = '{data['functionName']}');")
+        query = ("DELETE FROM device_function "
+                 "WHERE deviceID = (SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
+                 "AND functionID = (SELECT functionID FROM functions WHERE functionName = %(functionName)s);")
 
     elif referrer_path == '/missions':
-        query = (f"DELETE FROM missions "
-                 f"WHERE missionID = '{data['missionID']}';")
+        query = ("DELETE FROM missions "
+                 "WHERE missionID = %(missionID)s;")
 
     elif referrer_path == '/locations':
-        query = (f"DELETE FROM locations "
-                 f"WHERE locationID = '{data['locationID']}';")
+        query = ("DELETE FROM locations "
+                 "WHERE locationID = %(locationID)s;")
 
     elif referrer_path == '/operators':
-        query = (f"DELETE FROM operators "
-                 f"WHERE operatorID = '{data['operatorID']}';")
+        query = ("DELETE FROM operators "
+                 "WHERE operatorID = %(operatorID)s;")
 
     else:
         abort(500)
     # Execute the query, then check that a row was deleted.
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=db_connection, query=query, query_params=data)
     results = {}
     results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
