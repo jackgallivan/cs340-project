@@ -53,7 +53,7 @@
                     </tr>
                 -->
                 {% for row in data %}
-                <tr id="{{ loop.index }}">
+                <tr id="{{ row['deviceID'] }}">
                     {% for key in row.keys() %}
                     <td name={{ key }}>{{ row[key] }}</td>
                     {% endfor %}
