@@ -76,7 +76,7 @@ function bindButtons() {
 // - refactor add and delete buttons (UI)
 // - eventually need to integrate with our backend
 
-function getDropdownData(data) {
+function getDropdownData(data, element) {
 
     if (!data) {
         let req = new XMLHttpRequest();
@@ -123,10 +123,13 @@ function getDropdownData(data) {
     }
 
     else {
-        dropdowns = document.getElementsByTagName('select');
-        for (dropdown in dropdowns) {
-            dropdownName = dropdowns[dropdown].name;
+        // get-dropdown-data was passed an element on which to append the list of options
+        // we already have the response data and this doesn't need to be added to existing dropdowns.
+        if (element) {
+            console.log("got an element")
+            dropdownName = element.name;
             console.log(dropdownName);
+            console.log(data)
             if (dropdownName in response) {
                 data = response[dropdownName]
                 console.log(response[dropdownName]);
@@ -136,7 +139,7 @@ function getDropdownData(data) {
                     el = document.createElement('option');
                     el.value = value;
                     el.innerText = value;
-                    dropdowns[dropdown].appendChild(el);
+                    element.appendChild(el);
                 }
             }
         }
@@ -344,7 +347,7 @@ function makeEditable(event, dropdownData) {
                         child.textContent = '';
                         child.append(field);
 
-                        getDropdownData(dropdownData);
+                        getDropdownData(dropdownData, field);
 
                 } else {
 
