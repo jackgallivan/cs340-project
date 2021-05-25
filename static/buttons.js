@@ -203,16 +203,28 @@ function submitEdit(event, originalContent) {
     console.log(row)
     body['id'] = rowId;
     for (let element of row.children) {
-        if (element.firstElementChild) {
-            if ((element.firstElementChild.tagName == 'INPUT') || 
-                (element.firstElementChild.tagName == 'SELECT')) {
-                    let name = element.firstElementChild.getAttribute('name');
-                    let value = element.firstElementChild.value;
-                    body[name] = value;
-            }
+        // if (element.firstElementChild) {
+        //     if ((element.firstElementChild.tagName == 'INPUT') || 
+        //         (element.firstElementChild.tagName == 'SELECT')) {
+        //             let name = element.firstElementChild.getAttribute('name');
+        //             let value = element.firstElementChild.value;
+        //             body[name] = value;
+        //     }
+        // }
+        if (element.childElementCount == 0) {
+            let name = element.getAttribute('name');
+            let value = element.textContent;
+            body[name] = value;
+
+        } else if ((element.firstElementChild.tagName == 'INPUT') || 
+                  (element.firstElementChild.tagName == 'SELECT')) {
+            
+                let name = element.firstElementChild.getAttribute('name');
+                let value = element.firstElementChild.value;
+                body[name] = value;
         }
     }
-
+    console.log(body);
     // Open up a request and send to the app
     let req = new XMLHttpRequest();
     url = '/update-data'

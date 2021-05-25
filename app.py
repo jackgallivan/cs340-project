@@ -242,6 +242,8 @@ def update_data():
     referrer_path = urlparse(request.referrer).path
 
     if data:
+        print(data)
+
         if referrer_path == '/devices':
             query = (f"UPDATE devices "
                      f"SET deviceName = %(deviceName)s, "
@@ -249,30 +251,30 @@ def update_data():
                      f"manufacturer = %(manufacturer)s, "
                      f"locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
                      f"missionID = (SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
-                     f"WHERE deviceID = %(id)s;")
+                     f"WHERE deviceID = %(deviceID)s;")
         
         elif referrer_path == '/functions':
             query = (f"UPDATE functions "
                      f"SET functionName = %(functionName)s, description = %(description)s "
-                     f"WHERE functionID = %(id)s;")
+                     f"WHERE functionID = %(functionID)s;")
 
         elif referrer_path == '/operators':
             query = (f"UPDATE operators "
                      f"SET operatorName = %(operatorName)s, "
                      f"deviceID = (SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
-                     f"WHERE operatorID = %(id)s;") 
+                     f"WHERE operatorID = %(operatorID)s;") 
 
         elif referrer_path == '/locations':
             query = (f"UPDATE locations "
                     f"SET locationName = %(locationName)s, localSystem = %(localsystem)s, localBody = %(localBody)s "
-                    f"WHERE locationID = %(id)s;")
+                    f"WHERE locationID = %(locationID)s;")
 
         elif referrer_path == '/missions':
             query = (f"UPDATE missions "
-                     f"SET missionName = '{data['missionName']}', "
-                     f"objective = '{data['objective']}', "
-                     f"locationID = (SELECT locationID FROM locations WHERE locationName = '{data['locationName']}') "
-                     f"WHERE missionID = '{data['id']}';")
+                     f"SET missionName = %(missionName)s, "
+                     f"objective = %(objective)s, "
+                     f"locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s) "
+                     f"WHERE missionID = %(missionID)s;")
 
     else:
         abort(500)
@@ -283,6 +285,7 @@ def update_data():
     results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
         # ERROR: no row inserted
+        print("update failed bro")
         abort(500)
 
     return (str(referrer_path) + ": updated id " + json.dumps(data['id']), 200)
