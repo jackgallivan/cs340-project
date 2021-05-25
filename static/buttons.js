@@ -104,24 +104,8 @@ function getDropdownData(data) {
                             el.innerText = value;
                             dropdowns[dropdown].appendChild(el);
                         }
-                        // for (option in response[dropdown.name]) {
-                        //     console.log(option);
-                        // }
                     }
                 }
-
-                // for (data in response) {
-                //     console.log(data, response[data]);
-                // }
-                // () => {
-                //     dropdowns = document.getElementsByTagName('select');
-                //     for (el in dropdowns) {
-                //         for (option in JSON.parse(req.responseText)[dropdowns[el]]) {
-                //             new_option = document.createElement('option');
-                //             console.log(option)
-                //         }
-                //     }
-                // }
             } else {
                 console.log('looks like an error happened');
             }
@@ -133,8 +117,7 @@ function getDropdownData(data) {
         for (el in dropdowns) {
             data.push(dropdowns[el]['name']);
         }
-        // console.log(data)
-        // console.log(dropdowns);
+
         req.send(JSON.stringify(data));
         return data
     }
@@ -155,10 +138,9 @@ function getDropdownData(data) {
                     el.innerText = value;
                     dropdowns[dropdown].appendChild(el);
                 }
+            }
+        }
     }
-    // req.send(JSON.stringify(location.href.split("/").pop()));
-    }
-}
 }
 
 
@@ -207,14 +189,7 @@ function submitEdit(event, originalContent) {
     console.log(row)
     body['id'] = rowId;
     for (let element of row.children) {
-        // if (element.firstElementChild) {
-        //     if ((element.firstElementChild.tagName == 'INPUT') ||
-        //         (element.firstElementChild.tagName == 'SELECT')) {
-        //             let name = element.firstElementChild.getAttribute('name');
-        //             let value = element.firstElementChild.value;
-        //             body[name] = value;
-        //     }
-        // }
+
         if (element.childElementCount == 0) {
             let name = element.getAttribute('name');
             let value = element.textContent;
