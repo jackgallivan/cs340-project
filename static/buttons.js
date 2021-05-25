@@ -183,7 +183,11 @@ function addRow(btn) {
     req.addEventListener('load', () => {
         if (req.status < 400) {
             console.log(req.responseText);
-            rowData.id = JSON.parse(req.responseText)['id'];
+            const id = JSON.parse(req.responseText)['id']
+            console.log(id)
+            if (id) {
+                rowData.id = id
+            }
             addToTable(rowData);
         } else {
             console.log('looks like an error happened');
@@ -204,7 +208,7 @@ function submitEdit(event) {
     body['id'] = rowId;
     for (let element of row.children) {
         if (element.firstElementChild) {
-            if ((element.firstElementChild.tagName == 'INPUT') || 
+            if ((element.firstElementChild.tagName == 'INPUT') ||
                 (element.firstElementChild.tagName == 'SELECT')) {
                     let name = element.firstElementChild.getAttribute('name');
                     let value = element.firstElementChild.value;
@@ -272,35 +276,36 @@ function addToTable(rowData) {
     newrow = document.createElement('tr');
     for (let data in rowData) {
         const td = document.createElement('td')
-        td.setAttribute('name', data)
-        td.innerText = rowData[data]
         if (data == 'id') {
-            newrow.id = rowData[data]
+            td.setAttribute('name', rowData[data][0])
+            td.innerText = rowData[data][1]
+            newrow.id = rowData[data][1]
             newrow.prepend(td)
         }
         else {
+            td.setAttribute('name', data)
+            td.innerText = rowData[data]
             newrow.append(td);
         }
     }
 
     const edit = document.createElement('td');
-    const del = document.createElement('td');
     const editBtn = document.createElement('button');
-    const delBtn = document.createElement('button');
-
     editBtn.name = 'edit';
-    delBtn.name = 'del';
     editBtn.textContent = 'Update';
-    delBtn.textContent = 'Delete';
-
     bindEdit(editBtn);
-    bindDelete(delBtn);
-
     edit.append(editBtn);
-    del.append(delBtn);
-
     newrow.append(edit);
-    newrow.append(del);
+
+    if (window.location.pathname != '/device_function') {
+        const del = document.createElement('td');
+        const delBtn = document.createElement('button');
+        delBtn.name = 'del';
+        delBtn.textContent = 'Delete';
+        bindDelete(delBtn);
+        del.append(delBtn);
+        newrow.append(del);
+    }
 
     tbody.append(newrow);
 }

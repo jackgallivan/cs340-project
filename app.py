@@ -132,6 +132,8 @@ def add_data():
     Accessed for INSERT DB operations.
     """
     print("Accessing /add-data route")
+    results = {}
+
     # Get the data in the request object (to be added to a table)
     # and the referrer_path, which is the page we are requesting from.
     data = request.get_json()
@@ -139,6 +141,7 @@ def add_data():
     print(data)
     referrer_path = urlparse(request.referrer).path
     print("referer_path: " + referrer_path)
+
     # Create the INSERT query, dependent on the referrer_path
     if referrer_path == '/devices':
         query = ("INSERT INTO devices (deviceName, dateLaunched, manufacturer, locationID, missionID) "
@@ -148,6 +151,7 @@ def add_data():
                  "(SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
                  "(SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
                  ");")
+        results['id'] = ['deviceID']
 
     elif referrer_path == '/functions':
         query = ("INSERT INTO functions (functionName, description) "
@@ -158,6 +162,7 @@ def add_data():
                  "VALUES ((SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s), "
                  "(SELECT functionID FROM functions WHERE functionName = %(functionName)s) "
                  ");")
+        results['id'] = False
 
     elif referrer_path == '/missions':
         query = ("INSERT INTO missions (missionName, objective, locationID) "
@@ -165,26 +170,32 @@ def add_data():
                  "%(objective)s, "
                  "(SELECT locationID FROM locations WHERE locationName = %(locationName)s) "
                  ");")
+        results['id'] = ['missionID']
 
     elif referrer_path == '/locations':
         query = ("INSERT INTO locations (locationName, localSystem, localBody) "
                  "VALUES (%(locationName)s, %(localSystem)s, %(localBody)s);")
+        results['id'] = ['locationID']
 
     elif referrer_path == '/operators':
         query = ("INSERT INTO operators (operatorName, deviceID) "
                  "VALUES (%(operatorName)s, "
                  "(SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
                  ");")
+        results['id'] = ['operatorID']
 
     else:
         abort(500)
+
     # Execute the query, then check that a row was added.
     cursor = db.execute_query(db_connection=db_connection, query=query, query_params=data)
-    results = {}
-    results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
         # ERROR: no row inserted
         abort(500)
+
+    if results['id']:
+        results['id'].append(cursor.lastrowid)
+
     return (json.jsonify(results), 200)
 
 @app.route("/delete-data", methods=['POST'])
@@ -228,7 +239,6 @@ def delete_data():
     # Execute the query, then check that a row was deleted.
     cursor = db.execute_query(db_connection=db_connection, query=query, query_params=data)
     results = {}
-    results['id'] = cursor.lastrowid
     if cursor.rowcount == 0:
         # ERROR: no row deleted
         abort(500)
@@ -250,7 +260,7 @@ def update_data():
                      f"locationID = (SELECT locationID FROM locations WHERE locationName = '{data['locationName']}'), "
                      f"missionID = (SELECT missionID FROM missions WHERE missionName = '{data['missionName']}') "
                      f"WHERE deviceID = '{data['id']}';")
-        
+
         elif referrer_path == '/functions':
             query = (f"UPDATE functions "
                      f"SET functionName = '{data['functionName']}', description = '{data['description']}' "
@@ -260,7 +270,7 @@ def update_data():
             query = (f"UPDATE operators "
                      f"SET operatorName = '{data['operatorName']}', "
                      f"deviceID = (SELECT deviceID FROM devices WHERE deviceName = '{data['deviceName']}') "
-                     f"WHERE operatorID = '{data['id']}';") 
+                     f"WHERE operatorID = '{data['id']}';")
 
 
         elif referrer_path == '/locations':
@@ -277,7 +287,7 @@ def update_data():
 
     else:
         abort(500)
-    
+
     # Execute the query, then check that a row was added.
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = {}
@@ -287,7 +297,7 @@ def update_data():
         abort(500)
 
     return (str(referrer_path) + ": updated id " + json.dumps(data['id']), 200)
-    
+
 # Error Handlers
 
 @app.errorhandler(404)
