@@ -175,6 +175,7 @@ function addRow(btn) {
             }
             addToTable(rowData);
         } else {
+            alert("Unable to add a new entry at this time. Either name is not unique or required data is missing.")
             console.log('looks like an error happened');
         }
     });
@@ -218,7 +219,7 @@ function submitEdit(event, originalContent) {
             cancelEdit(event);
         } else {
             console.log('looks like an error happened');
-            //cancelEdit(event, body);
+            alert("Unable to submit edit. Edit must be different from original values. Double check your data and try again.")
             cancelEdit(event, originalContent);
         }
     });
