@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', bindButtons);
-// document.addEventListener('DOMContentLoaded', getDropdownData);
+dropdownData = document.addEventListener('DOMContentLoaded', getDropdownData);
 
 // BUTTON BINDINGS (ON PAGE LOAD)
 
@@ -420,7 +420,7 @@ function cancelEdit(event, originalContent) {
                 editBtn.name = 'edit';
                 editBtn.textContent = 'Update';
 
-                bindEdit(editBtn);
+                bindEdit(editBtn, dropdownData);
                 child.replaceChild(editBtn, child.firstElementChild);
 
             } else if (child.firstElementChild.name == 'cancel') {
