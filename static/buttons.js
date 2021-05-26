@@ -248,8 +248,9 @@ function deleteRow(btn) {
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
         if (req.status < 400) {
-            console.log(req.responseText);
-            tableRow.remove();
+            console.log(req.responseText)
+            tableRow.remove()
+            tf.refreshFilters()
         } else {
             console.log('looks like an error happened');
         }
@@ -265,6 +266,8 @@ function addToTable(rowData) {
     // present the data as a new tableRow in the table
     const tbody = document.querySelector('tbody');
     newrow = document.createElement('tr');
+
+    // Set the html data for the new row's data cells
     for (let data in rowData) {
         const td = document.createElement('td')
         if (data == 'id') {
@@ -280,6 +283,7 @@ function addToTable(rowData) {
         }
     }
 
+    // Create an edit button if the table is NOT device_function
     if (window.location.pathname != '/device_function') {
         const edit = document.createElement('td')
         const editBtn = document.createElement('button')
@@ -290,7 +294,7 @@ function addToTable(rowData) {
         newrow.append(edit)
     }
 
-
+    // Create the delete button
     const del = document.createElement('td');
     const delBtn = document.createElement('button');
     delBtn.name = 'del';
@@ -299,7 +303,11 @@ function addToTable(rowData) {
     del.append(delBtn);
     newrow.append(del);
 
+    // Add the new row to the table
     tbody.append(newrow);
+
+    // Refresh table filters
+    tf.refreshFilters()
 }
 
 function makeEditable(event, dropdownData) {
@@ -439,61 +447,77 @@ function cancelEdit(event, originalContent) {
 
 // TABLE FILTERS
 
+// tablefilter object in global scope, to be accessed by other functions.
+let tf
 document.addEventListener('DOMContentLoaded', addFilters)
 
 function addFilters () {
-  const tables = document.querySelectorAll('table')
-  for (let tbl of tables) {
-    addTableFilter(tbl)
-  }
+    const data_table = document.querySelector('table')
+    console.log(data_table)
+    tf = new TableFilterClass(data_table)
+    tf.addTableFilter()
 }
 
-function addTableFilter (tbl) {
-  // Adds filter and sorting functionality to the given DOM table element.
-
-  // Get the table header elements
-  const tableHeaders = tbl.querySelector('tr').children
-  // Determine num columns, and num that house buttons (header textContent = 'Update' or 'Delete').
-  const numCols = tableHeaders.length
-  let numButtons = 0
-  for (e of tableHeaders) {
-    if (e.textContent == 'Update' || e.textContent == 'Delete') {
-      numButtons++
+// Creating a tablefilter class
+class TableFilterClass {
+    constructor(tbl) {
+        this.table = tbl
+        this.tf = this.createTableFilter()
     }
-  }
 
-  // Create filter config for the given table
-  const filterConfig = {
-    base_path: '../static/node_modules/tablefilter/dist/tablefilter/',
-    extensions: [{ name: 'sort' }],
-    btn_reset: {
-      text: 'Clear Filters'
-    },
-    help_instructions: {
-      text:
-        'Click the header cells to sort the data.<br><br>' +
-        'Use the drop-down menus to filter by individual values.<br>'
-        ,
-      btn_text: 'Help',
-      load_filters_on_demand: true
+    createTableFilter() {
+        // Adds filter and sorting functionality to the given DOM table element.
+
+        // Get the table header elements
+        const tableHeaders = this.table.querySelector('tr').children
+        // Determine num columns, and num that house buttons (header textContent = 'Update' or 'Delete').
+        const numCols = tableHeaders.length
+        let numButtons = 0
+        for (let e of tableHeaders) {
+            if (e.textContent == 'Update' || e.textContent == 'Delete') {
+            numButtons++
+            }
+        }
+
+        // Create filter config for the given table
+        const filterConfig = {
+            base_path: '../static/node_modules/tablefilter/dist/tablefilter/',
+            extensions: [{ name: 'sort' }],
+            btn_reset: {
+            text: 'Clear Filters'
+            },
+            help_instructions: {
+            text:
+                'Click the header cells to sort the data.<br><br>' +
+                'Use the drop-down menus to filter by individual values.<br>'
+                ,
+            btn_text: 'Help',
+            load_filters_on_demand: true
+            }
+        }
+        // Add the config for each column.
+        // 'select' = dropdown. 'none' = no filter (button columns).
+        for (let i = 0; i < numCols; i++) {
+            if (i < numCols - numButtons) {
+            filterConfig['col_' + i] = 'select'
+            } else {
+            filterConfig['col_' + i] = 'none'
+            }
+        }
+
+        // Create the filter using the config, and return it
+        tf = new TableFilter(this.table, filterConfig)
+        return tf
     }
-  }
-  // Add the config for each column.
-  // 'select' = dropdown. 'none' = no filter (button columns).
-  for (let i = 0; i < numCols; i++) {
-    if (i < numCols - numButtons) {
-      filterConfig['col_' + i] = 'select'
-    } else {
-      filterConfig['col_' + i] = 'none'
+
+    addTableFilter() {
+        // Initialize the table filter
+        this.tf.init()
     }
-  }
 
-  // Create the filter using the config, and initialize it
-  const tf = new TableFilter(tbl, filterConfig)
-  tf.init()
-}
-
-function refreshFilters(tf) {
-  const feature = tf.feature('dropdown')
-  feature.refreshAll()
+    refreshFilters() {
+        // Refresh table filter dropdowns
+        const feature = this.tf.feature('dropdown')
+        feature.refreshAll()
+    }
 }
