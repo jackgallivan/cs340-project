@@ -175,6 +175,7 @@ function addRow(btn) {
             }
             addToTable(rowData);
         } else {
+            alert("Unable to add a new entry at this time. Either name is not unique or required data is missing.")
             console.log('looks like an error happened');
         }
     });
