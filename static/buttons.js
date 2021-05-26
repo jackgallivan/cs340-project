@@ -126,7 +126,7 @@ function getDropdownData(data, element) {
         // get-dropdown-data was passed an element on which to append the list of options
         // we already have the response data and this doesn't need to be added to existing dropdowns.
         if (element) {
-            console.log("got an element")
+            console.log('got an element')
             dropdownName = element.name;
             console.log(dropdownName);
             console.log(data)
@@ -167,15 +167,16 @@ function addRow(btn) {
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
         if (req.status < 400) {
-            console.log(req.responseText);
             const id = JSON.parse(req.responseText)['id']
-            console.log(id)
             if (id) {
                 rowData.id = id
             }
+            // Append the new data to the table
             addToTable(rowData);
+            // Refresh table filters
+            tf.refreshFilters()
         } else {
-            alert("Unable to add a new entry at this time. Either name is not unique or required data is missing.")
+            alert('Unable to add a new entry at this time. Either name is not unique or required data is missing.')
             console.log('looks like an error happened');
         }
     });
@@ -217,9 +218,11 @@ function submitEdit(event, originalContent) {
         if (req.status < 400) {
             console.log(req.responseText);
             cancelEdit(event);
+            // Refresh table filters
+            tf.refreshFilters()
         } else {
             console.log('looks like an error happened');
-            alert("Unable to submit edit. Edit must be different from original values. Double check your data and try again.")
+            alert('Unable to submit edit. Edit must be different from original values. Double check your data and try again.')
             cancelEdit(event, originalContent);
         }
     });
@@ -249,8 +252,9 @@ function deleteRow(btn) {
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', () => {
         if (req.status < 400) {
-            console.log(req.responseText)
+            // Remove the row from the table
             tableRow.remove()
+            // Refresh table filters
             tf.refreshFilters()
         } else {
             console.log('looks like an error happened');
@@ -306,9 +310,6 @@ function addToTable(rowData) {
 
     // Add the new row to the table
     tbody.append(newrow);
-
-    // Refresh table filters
-    tf.refreshFilters()
 }
 
 function makeEditable(event, dropdownData) {
