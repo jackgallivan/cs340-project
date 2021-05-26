@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', bindButtons);
-// document.addEventListener('DOMContentLoaded', getDropdownData);
+dropdownData = document.addEventListener('DOMContentLoaded', getDropdownData);
 
 // BUTTON BINDINGS (ON PAGE LOAD)
 
@@ -76,7 +76,7 @@ function bindButtons() {
 // - refactor add and delete buttons (UI)
 // - eventually need to integrate with our backend
 
-function getDropdownData(data) {
+function getDropdownData(data, element) {
 
     if (!data) {
         let req = new XMLHttpRequest();
@@ -104,24 +104,8 @@ function getDropdownData(data) {
                             el.innerText = value;
                             dropdowns[dropdown].appendChild(el);
                         }
-                        // for (option in response[dropdown.name]) {
-                        //     console.log(option);
-                        // }
                     }
                 }
-
-                // for (data in response) {
-                //     console.log(data, response[data]);
-                // }
-                // () => {
-                //     dropdowns = document.getElementsByTagName('select');
-                //     for (el in dropdowns) {
-                //         for (option in JSON.parse(req.responseText)[dropdowns[el]]) {
-                //             new_option = document.createElement('option');
-                //             console.log(option)
-                //         }
-                //     }
-                // }
             } else {
                 console.log('looks like an error happened');
             }
@@ -133,17 +117,19 @@ function getDropdownData(data) {
         for (el in dropdowns) {
             data.push(dropdowns[el]['name']);
         }
-        // console.log(data)
-        // console.log(dropdowns);
+
         req.send(JSON.stringify(data));
         return data
     }
 
     else {
-        dropdowns = document.getElementsByTagName('select');
-        for (dropdown in dropdowns) {
-            dropdownName = dropdowns[dropdown].name;
+        // get-dropdown-data was passed an element on which to append the list of options
+        // we already have the response data and this doesn't need to be added to existing dropdowns.
+        if (element) {
+            console.log("got an element")
+            dropdownName = element.name;
             console.log(dropdownName);
+            console.log(data)
             if (dropdownName in response) {
                 data = response[dropdownName]
                 console.log(response[dropdownName]);
@@ -153,12 +139,11 @@ function getDropdownData(data) {
                     el = document.createElement('option');
                     el.value = value;
                     el.innerText = value;
-                    dropdowns[dropdown].appendChild(el);
+                    element.appendChild(el);
                 }
+            }
+        }
     }
-    // req.send(JSON.stringify(location.href.split("/").pop()));
-    }
-}
 }
 
 
@@ -207,14 +192,7 @@ function submitEdit(event, originalContent) {
     console.log(row)
     body['id'] = rowId;
     for (let element of row.children) {
-        // if (element.firstElementChild) {
-        //     if ((element.firstElementChild.tagName == 'INPUT') ||
-        //         (element.firstElementChild.tagName == 'SELECT')) {
-        //             let name = element.firstElementChild.getAttribute('name');
-        //             let value = element.firstElementChild.value;
-        //             body[name] = value;
-        //     }
-        // }
+
         if (element.childElementCount == 0) {
             let name = element.getAttribute('name');
             let value = element.textContent;
@@ -369,7 +347,7 @@ function makeEditable(event, dropdownData) {
                         child.textContent = '';
                         child.append(field);
 
-                        getDropdownData(dropdownData);
+                        getDropdownData(dropdownData, field);
 
                 } else {
 
@@ -442,7 +420,7 @@ function cancelEdit(event, originalContent) {
                 editBtn.name = 'edit';
                 editBtn.textContent = 'Update';
 
-                bindEdit(editBtn);
+                bindEdit(editBtn, dropdownData);
                 child.replaceChild(editBtn, child.firstElementChild);
 
             } else if (child.firstElementChild.name == 'cancel') {
