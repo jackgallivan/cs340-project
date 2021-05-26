@@ -157,6 +157,9 @@ function addRow(btn) {
     // Add the element values to the request body.
     formElements.forEach(element => {
         rowData[element.name] = element.value
+        if (!element.value) {
+            rowData[element.name] = null
+        }
     })
 
     // ** MAKE DB REQUEST ** //
