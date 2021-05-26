@@ -219,7 +219,7 @@ function submitEdit(event, originalContent) {
             cancelEdit(event);
         } else {
             console.log('looks like an error happened');
-            //cancelEdit(event, body);
+            alert("Unable to submit edit. Edit must be different from original values. Double check your data and try again.")
             cancelEdit(event, originalContent);
         }
     });
