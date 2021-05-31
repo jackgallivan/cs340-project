@@ -44,7 +44,7 @@
                 {% for row in data %}
                 <tr id="{{ row['functionID'] }}">
                     {% for key in row.keys() %}
-                    <td  name={{ key }}>{{ row[key] }}</td>
+                    <td  name={{ key }}>{{ row[key] or '' }}</td>
                     {% endfor %}
                     <td><button name="edit">Update</button></td>
                     <td><button name="del">Delete</button></td>
