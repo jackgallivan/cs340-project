@@ -207,7 +207,12 @@ function submitEdit(event, originalContent) {
                   (element.firstElementChild.tagName == 'SELECT')) {
 
                 let name = element.firstElementChild.getAttribute('name');
-                let value = element.firstElementChild.value;
+                let value;
+                if (!element.firstElementChild.value) {
+                    value = null;
+                } else {
+                    value = element.firstElementChild.value;
+                }
                 body[name] = value;
         }
     }
