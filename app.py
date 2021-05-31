@@ -156,6 +156,7 @@ def add_data():
     elif referrer_path == '/functions':
         query = ("INSERT INTO functions (functionName, description) "
                  "VALUES (%(functionName)s, %(description)s);")
+        results['id'] = ['functionID']
 
     elif referrer_path == '/device_function':
         query = ("INSERT INTO device_function (deviceID, functionID) "
