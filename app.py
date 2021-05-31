@@ -5,6 +5,7 @@ Authors: Richie Stuver and Jack Gallivan
 Date Created: 05-18-21
 """
 
+import re
 from flask import Flask, json, render_template, request, abort
 import os
 from urllib.parse import urlparse
@@ -91,21 +92,22 @@ def get_dropdown_data():
                        "functionName": "SELECT functionName FROM functions;"}
 
     dropdowns = request.get_json()
-
+    referrer_path = urlparse(request.referrer).path
     results = {}
 
     for dropdown in dropdowns:
         if dropdown in valid_dropdowns:
-            # print("executing query for " + str(dropdown))
 
             query = valid_dropdowns[dropdown]
             cursor = db.execute_query(db_connection=db_connection, query=query)
             results[dropdown] = cursor.fetchall()
-            # print(results[dropdown])
 
-    # query = "SELECT locationName FROM locations;"
-    # results = db.execute_query(db_connection=db_connection, query=query)
-    # print(results)
+            # device page and missionID must be nullable
+            if referrer_path == '/devices' and dropdown == 'missionName' \
+                or referrer_path == '/operators' and dropdown == 'deviceName':
+
+                results[dropdown].append({dropdown: ''})
+
     return (json.jsonify(results), 200)
 
 @app.route("/reset")
