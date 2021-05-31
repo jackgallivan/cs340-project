@@ -258,36 +258,36 @@ def update_data():
         print(data)
 
         if referrer_path == '/devices':
-            query = (f"UPDATE devices "
-                     f"SET deviceName = %(deviceName)s, "
-                     f"dateLaunched = %(dateLaunched)s, "
-                     f"manufacturer = %(manufacturer)s, "
-                     f"locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
-                     f"missionID = (SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
-                     f"WHERE deviceID = %(deviceID)s;")
+            query = ("UPDATE devices "
+                     "SET deviceName = %(deviceName)s, "
+                     "dateLaunched = %(dateLaunched)s, "
+                     "manufacturer = %(manufacturer)s, "
+                     "locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s), "
+                     "missionID = (SELECT missionID FROM missions WHERE missionName = %(missionName)s) "
+                     "WHERE deviceID = %(deviceID)s;")
 
         elif referrer_path == '/functions':
-            query = (f"UPDATE functions "
-                     f"SET functionName = %(functionName)s, description = %(description)s "
-                     f"WHERE functionID = %(functionID)s;")
+            query = ("UPDATE functions "
+                     "SET functionName = %(functionName)s, description = %(description)s "
+                     "WHERE functionID = %(functionID)s;")
 
         elif referrer_path == '/operators':
-            query = (f"UPDATE operators "
-                     f"SET operatorName = %(operatorName)s, "
-                     f"deviceID = (SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
-                     f"WHERE operatorID = %(operatorID)s;")
+            query = ("UPDATE operators "
+                     "SET operatorName = %(operatorName)s, "
+                     "deviceID = (SELECT deviceID FROM devices WHERE deviceName = %(deviceName)s) "
+                     "WHERE operatorID = %(operatorID)s;")
 
         elif referrer_path == '/locations':
-            query = (f"UPDATE locations "
-                    f"SET locationName = %(locationName)s, localSystem = %(localsystem)s, localBody = %(localBody)s "
-                    f"WHERE locationID = %(locationID)s;")
+            query = ("UPDATE locations "
+                     "SET locationName = %(locationName)s, localSystem = %(localsystem)s, localBody = %(localBody)s "
+                     "WHERE locationID = %(locationID)s;")
 
         elif referrer_path == '/missions':
-            query = (f"UPDATE missions "
-                     f"SET missionName = %(missionName)s, "
-                     f"objective = %(objective)s, "
-                     f"locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s) "
-                     f"WHERE missionID = %(missionID)s;")
+            query = ("UPDATE missions "
+                     "SET missionName = %(missionName)s, "
+                     "objective = %(objective)s, "
+                     "locationID = (SELECT locationID FROM locations WHERE locationName = %(locationName)s) "
+                     "WHERE missionID = %(missionID)s;")
 
     else:
         abort(500)
