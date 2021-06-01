@@ -12,7 +12,8 @@ dbconfig = {
     'host': os.environ.get("340DBHOST"),
     'user': os.environ.get("340DBUSER"),
     'passwd': os.environ.get("340DBPW"),
-    'db': os.environ.get("340DB")
+    'db': os.environ.get("340DB"),
+    'sql_mode': 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO'
 }
 
 def connect_to_database(dbconfig = dbconfig):
