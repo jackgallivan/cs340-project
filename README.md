@@ -1,2 +1,5 @@
-# cs340-project
-CS340 Portfolio Project
+# Databases Project
+
+RDBMS and website project.
+
+See project writeup [here](Project_Final_Writeup.pdf)
